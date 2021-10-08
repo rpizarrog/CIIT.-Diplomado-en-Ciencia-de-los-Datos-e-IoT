@@ -1,0 +1,16 @@
+> print("Hola")
+[1] "Hola"
+> cat("Hola")
+Hola
+> paste("Hola", "Como estas")
+[1] "Hola Como estas"
+> cat("Hola", "Como estas")
+Hola Como estas
+> print("Hola", "Como estas")
+Error in print.default("Hola", "Como estas") : 
+  invalid printing digits -2147483648
+In addition: Warning message:
+In print.default("Hola", "Como estas") : NAs introduced by coercion
+> paste("Hola", "Como estas")
+[1] "Hola Como estas"
+> dfg
