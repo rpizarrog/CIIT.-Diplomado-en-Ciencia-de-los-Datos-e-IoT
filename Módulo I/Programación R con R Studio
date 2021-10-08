@@ -1,0 +1,37 @@
+
+Módulo I. Programación R con R Studio
+
+Objetivo
+
+Construir programas en lenguaje de programación R en entorno R Studio para analizar, interpretar y comunicar datos con enfoque estadístico y probabilístico presentados mediante documentos markdown y publicados en la nube con el servicio RPubs.
+
+Dirigido a: 
+•	Estudiantes: Reforzar aprendizajes de probabilidad y estadística
+•	Académicos: Desarrollar habilidades en el uso de herramientas estadística, probabilidad y lenguaje de programación como alternativa de enseñanza.
+•	Investigadores. Alternativa para difundir trabajos con análisis estadístico de datos.
+•	Empresa: Aprovechar las ventajas de utilizar R en el ámbito estadístico y probabilístico para el desarrollo de análisis de datos.
+•	A la comunidad. Personas interesadas en R y R Studio
+
+Requisitos: 
+•	Laptop y/o equipo de cómputo
+•	Instalar R y R Studio, 
+•	Conectividad a internet
+•	Conocimientos generales de programación y HTML
+•	Conocimientos generales de probabilidad y estadística
+•	Enlaces google meet
+
+Temas: 
+•	Reconocimiento de entorno de trabajo
+•	Programación R
+•	Estructuras de datos en R
+•	Funciones del usuario en R
+•	Visualización de datos
+•	Archivos markdown y publicación rpubs
+•	Importar y exportar datos
+•	Librería dplyr
+•	Simulación de datos
+•	Gráficos avanzados ggplot2() y plotty()
+•	Strings and Dates en R
+•	Datos semiestructurados
+•	R shiny
+
