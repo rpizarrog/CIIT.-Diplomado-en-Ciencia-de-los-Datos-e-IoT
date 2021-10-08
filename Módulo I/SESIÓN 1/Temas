@@ -2,7 +2,7 @@ Sesión 01. Ciencia de los datos, entorno R y R Studio
 
 * Instalar R y R Studio
 * Entorno R Studio
-* Programación R y construcción de scripts 
+* Programación R en consola y construcción de scripts 
 * Tipos de datos, variables 
 * Números, operaciones matemáticas y funciones matemáticas, strings
 * Operadores de asignación <- y -> =; operadores matemáticos; operadores lógicos
