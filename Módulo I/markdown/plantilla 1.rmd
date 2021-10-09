@@ -1,0 +1,21 @@
+---
+title: "Ejercicio #: título"
+author: "Autor"
+date: "dd/mm/aaaa"
+output: html_document
+---
+
+# Objetivo
+¿Cuál es el objetivo?, verbo ¿qué?, ¿cómo y para qué?
+
+# Descripción
+
+Párrafo en lo general de lo que hace y como el ejercicio
+
+# Desarrollo
+
+Proceso del ejercicio
+
+# Interpretación
+
+Descripción a título personal de lo que hace el ejercicio
