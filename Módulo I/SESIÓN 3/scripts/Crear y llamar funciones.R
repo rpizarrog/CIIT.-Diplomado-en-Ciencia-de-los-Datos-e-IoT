@@ -22,10 +22,9 @@ faritmeticas <- function(a, b, tipo) {
 faritmeticas(4,5,3)
 # [1] 9
 
-paste(" La suma de 4 y 5 es: ", faritmeticas(4,5))
+paste(" La suma de 4 y 5 es: ", faritmeticas(4,5, 2))
 # [1] " La suma de 4 y 5 es:  9"
-suma <- faritmeticas(10, 20)
-
+suma <- faritmeticas(10, 20,1)
 
 
 # Mandar llamar la función 
