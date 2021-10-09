@@ -60,7 +60,7 @@ mat.edades
 matA <- matrix(c(4,3,4,5), nrow = 2, ncol = )
 matA
 
-matB <- matix(c(3,1,2,4,5,4,6), nrow = 3, ncol= 2)
+matB <- matrix(c(3,1,2,4,5,4,6), nrow = 3, ncol= 2)
 matB
 
 # Multipicar matrices
