@@ -1,6 +1,6 @@
-Sesión 04 Probabilidad y distribuciones de probabilidad
+Sesión 04. Importar y Exportar datos
 
-•	Probabilidad 
-•	Operaciones de conjuntos
-•	Variables aleatorias discretas y continuas
-•	Distribución Normal
+•	Importar y exportar datos read.csv(), writescv()
+•	Importar datos Excel
+•	Importar datos texto 
+
