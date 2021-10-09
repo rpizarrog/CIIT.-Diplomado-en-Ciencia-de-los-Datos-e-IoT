@@ -1,0 +1,9 @@
+Sesión 05. Estadística descriptiva en R, comunicación de datos con archivos markdown y publicar en R Pubs
+
+•	Variable de interés
+•	Muestra con sample()
+•	Medidas de tendencia central mean(), median(), quantile(), table(), 
+•	Medidas de dispersión var(), sd()
+•	Función summary()
+•	Frecuencias e histograma, funciones which(), subset() e hist()
+•	Tablas de frecuencias y su uso; librería fdth()
