@@ -59,6 +59,21 @@ min(edades)
 
 
 
+# La moda el elemento que mas se repite
+
+
+sort(edades)
+table(edades)
+
+moda <- sort(table(edades), decreasing = TRUE)
+moda
+
+hist(edades)
+
+
+
+
+
 
 
 
