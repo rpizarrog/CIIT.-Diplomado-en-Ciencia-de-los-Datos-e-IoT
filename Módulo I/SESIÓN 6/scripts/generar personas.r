@@ -30,8 +30,7 @@ frecuencias <- table(extraer.100.canicas)
 frecuencias
 
 
-
-edad.personas <- sample(x = 18:65, size = 10000, replace = TRUE)+
+edad.personas <- sample(x = 18:65, size = 10000, replace = TRUE)
 edad.personas
 
 
