@@ -1,0 +1,58 @@
+---
+title: "Probabilidad"
+author: "Rubén Pizarro Gurrola"
+date: "15/10/2021"
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
+    toc_depth: 6
+---
+
+# Objetivo 
+
+Ejercicios de probabilidad
+
+
+# Descripción
+
+Encontrar probabilida a partir de espacioes muestrales.
+
+
+# Desarrollo
+
+## Cargar librerías
+```{r message=FALSE, warning=FALSE}
+library(fdth)
+
+```
+
+## Cargar datos
+```{r message=FALSE, warning=FALSE}
+datos <- source("https://raw.githubusercontent.com/rpizarrog/CIIT.-Diplomado-en-Ciencia-de-los-Datos-e-IoT/main/M%C3%B3dulo%20I/SESI%C3%93N%206/scripts/factorizar%20o%20categorizar%20variables%20character%20de%20datos.personas.r")
+
+datos <- data.frame(datos)
+
+summary(datos)
+```
+
+## Determinar probabilidades
+
+### Probabilidad de que sea de de algún estado
+```{r}
+tabla <- fdt_cat(datos$value.estado)
+tabla
+```
+
+### Probabilidad de que sea de algún genero
+```{r}
+tabla <- fdt_cat(datos$value.genero)
+tabla
+```
+
+
+
+# Interpretación
+
+El término de frecuencia sirve de bases para estimar probabilidas a que la fórmula para encontrar ñrobabildia es $prob = \frac{n}{N}$

@@ -1,0 +1,93 @@
+---
+title: "Operaciones de Conjuntos con dados"
+author: "Rubén Pizarro Gurrola"
+date: "15/10/2021"
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
+    toc_depth: 6
+---
+
+# Objetivo
+
+Simular operaciones de conjunto 
+
+# Descripción
+
+Crear conjuntos de resultados de la cara arriba de tirar 1 dado
+Crear conjunto de pares
+Crear cojunto de nones
+Crear conjunto. de primos 
+Simjular operaciones de conjuntos
+
+# Desarrollo
+
+## Cargar librerías
+```{r}
+# Pendiente
+```
+
+## Inicializar conjuntos
+```{r}
+dado <- c(1,2,3,4,5,6)
+pares <- c(2,4,6)
+nones <- c(1,3,5)
+primos <- c(1,2,3,5)
+
+
+```
+
+## Operaciones de conjuntos
+
+Efectuar operaciones
+
+### UNION
+
+```{r}
+paresUnones <- union(pares, nones)
+paresUnones
+```
+### INTERSECCION
+
+```{r}
+paresINTERnones <- intersect(pares, nones)
+paresINTERnones 
+
+```
+
+```{r}
+paresINTERprimos <- intersect(pares, primos)
+paresINTERprimos
+```
+
+### Diferencia
+
+```{r}
+diffParesNones <- setdiff(pares,nones)
+diffParesNones
+
+
+diffNonesPares <- setdiff(nones, pares)
+diffNonesPares
+
+
+setdiff(primos, nones)
+
+setdiff(nones, primos)
+
+
+```
+
+### Complemento
+
+```{r}
+complentoPrimos <- setdiff(dado,primos)
+complentoPrimos
+```
+
+
+# Interpretación
+
+¿Para que sirve operaciones de conjunto?. Para determinar cantidad de eventos resultantes y para estimar probabilidades.
