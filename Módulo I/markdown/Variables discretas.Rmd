@@ -1,0 +1,49 @@
+---
+title: "Variables discretas "
+author: "Rubén Pizarro Gurrola"
+date: "15/10/2021"
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
+    toc_depth: 6
+---
+
+# Objetivo
+
+Interpretar probabilidad con variables discretas
+
+# Descripción
+
+# Marco conceptual
+
+## Variables discretas
+
+Son valores números enteros entre 0 y n 0,1,2,3,4 son variables discretas.
+
+Ejemplo: las caras de un dado, las nominaciones de baraja, la llegada de personas al cine.
+
+![](images/Funci%C3%B3n+de+probabilidad+de+una+variable+aleatoria+discreta-01.jpg)
+
+# Desarrollo
+
+## Cargar datos
+
+```{r}
+x <- 0:12
+probs <- c(0.035, 0.035, 0.071, 0.071, 0.107, 0.107, 0.148, 0.107, 0.107, 0.071, 0.071, 0.035, 0.035)
+
+sum(probs)
+
+x
+probs
+
+tabla.dist <- data.frame(x, probs, p.acum = cumsum(probs), p.porc = cumsum(probs) * 100)
+tabla.dist
+
+```
+
+# Interpretación
+
+Las tablas de probabilidad o de distribución permiten interpretar probabilidades.
