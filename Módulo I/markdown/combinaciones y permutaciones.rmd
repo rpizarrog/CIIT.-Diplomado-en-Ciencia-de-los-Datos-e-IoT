@@ -1,0 +1,120 @@
+---
+title: "Combinaciones y Permutaciones"
+author: "Rubén Pizarro Gurrola"
+date: "15/10/2021"
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
+    toc_depth: 6
+---
+
+# Objetivo
+
+Hacer Combinaciones y Permutaciones
+
+# Descripción
+
+Por medio de funcioens de combinations() y permutations() simular combinaciones y permutaciones.
+
+# Desarrollo
+
+## Cargar librerías
+
+```{r message=FALSE, warning=FALSE}
+# install.packages("gtools")
+library(gtools)
+```
+
+## Inicializar algunos datos
+
+Hacer combinaciones de nombres de personas
+```{r}
+nombres <- c("JUAN", "JESUS", "PEDRO", "MARY", "LUCY", "ARACELY", "ZENAIDA")
+
+nombres
+
+n <- length(nombres)
+```
+
+$$
+S=Cn\binom{n}{r} = \frac{n!}{(r!(n-r)!)}
+$$
+
+
+## Combinaciones
+
+### Número de combinaciones de dos
+```{r}
+r <- 2
+C <- factorial(n) / (factorial(r) * factorial(n-r))
+C
+```
+
+
+### Hacer combinaciones en grupos de 2 en 2
+```{r}
+
+combinar <- combinations(n = n, r = r, v = nombres)
+combinar
+```
+
+### Número de combinaciones de tres en tres
+```{r}
+r <- 3
+C <- factorial(n) / (factorial(r) * factorial(n-r))
+C
+```
+
+
+Hacer combinaciones en grupos de 3 en 3
+```{r}
+
+combinar <- combinations(n = n, r = r, v = nombres)
+combinar
+```
+
+
+## Permutaciones
+
+El orden de los elementos SI importa
+
+$$
+S = Pr\binom{n}{r} = \frac{n!}{(n-r)!}
+$$
+
+### Número de Permutaciones de dos
+```{r}
+r <- 2
+P <- factorial(n) / factorial(n-r)
+P
+```
+
+
+### Hacer permutaciones en grupos de 2 en 2
+```{r}
+
+permutar <- permutations(n = n, r = r, v = nombres)
+permutar
+```
+
+### Número de Permutaciones de tres
+```{r}
+r <- 3
+P <- factorial(n) / factorial(n-r)
+P
+```
+
+
+### Hacer permutaciones en grupos de 2 en 2
+```{r}
+
+permutar <- permutations(n = n, r = r, v = nombres)
+permutar
+```
+
+# Interpretación
+
+Las combinaciones y permutaciones sirven para formar espacios muestrales que permitan encontrar o visualizar probabilidades de acuerdo a tareas específica.
+
