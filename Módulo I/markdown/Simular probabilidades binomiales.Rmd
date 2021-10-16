@@ -1,0 +1,126 @@
+---
+title: "Probabilidad Binomial"
+author: "Rubén Pizarro Gurrola"
+date: "15/10/2021"
+output: html_document
+---
+
+# Objetivo
+
+Simular probabilidades binomiales
+
+Imaginemos que un 80% de personas en el mundo ha visto el partido de la final del último mundial de fútbol. Tras el evento, 4 amigos se reúnen a conversar, 
+
+
+# Desarrollo
+
+## Librerías
+
+```{r message=FALSE, warning=FALSE}
+library(gtools)
+library(ggplot2)
+library(plotly)
+```
+
+## Inicializar variables del ejercicio
+
+```{r}
+p <- 0.80
+q <- 0.20
+
+n <- 4   # Tamaño de la muestra o total de la muestra
+x <- "?" # Cualquier valor entre 1 y 4 puede ser para uno, dos , tres o cuatro, incluyendo el cero.
+```
+
+### ¿Cuál es la probabilidad de que 3 de ellos hayan visto el partido?
+
+#### Conforme a Fórmula
+
+$$
+P(x)=\binom{n}{x}\cdot p^x\cdot(1-p)^{n-x}
+$$
+
+##### Primero el número de combinaciones de x=3 n = 4
+
+```{r}
+x <- 3
+combinaciones <- combinations(n = n, r = x, v = 1:4)
+n.combinaciones <- nrow(combinaciones)
+combinaciones
+n.combinaciones
+```
+
+##### Calculando conforme a la fórmula
+```{r}
+p.binom.x <- n.combinaciones * (p^x) * (1-p)^(n-x)
+p.binom.x * 100
+```
+
+#### Conforme a función dbinom()
+
+```{r}
+p.binom.x3 <- dbinom(x = x, size = n, prob = p)
+p.binom.x3
+```
+
+### ¿Cuál es la probabilidad de que 2 de ellos hayan visto el partido?
+
+#### Conforme a Fórmula
+
+$$
+P(x)=\binom{n}{x}\cdot p^x\cdot(1-p)^{n-x}
+$$
+
+##### Primero el número de combinaciones de x=2 n = 4
+
+```{r}
+x=2
+combinaciones <- combinations(n = n, r = x, v = 1:4)
+n.combinaciones <- nrow(combinaciones)
+combinaciones
+n.combinaciones
+```
+
+##### Calculando conforme a la fórmula
+```{r}
+p.binom.x <- n.combinaciones * (p^x) * (1-p)^(n-x)
+p.binom.x
+```
+
+#### Conforme a función dbinom()
+
+```{r}
+p.binom.x2 <- dbinom(x = x, size = n, prob = p)
+p.binom.x2 
+```
+
+### Generando una tabla de distribución binomial
+
+```{r}
+tabla <- data.frame(x=0:n, p.binom = dbinom(x = 0:n, size = n, prob = p), p.acum = pbinom(q = 0:4, size = n, prob = p))
+tabla
+```
+
+### Gráfica barra de la probabilidad binomial
+```{r}
+ggplot(data = tabla, mapping = aes(x = x, y = p.binom)) +
+  geom_bar(stat = "identity")
+```
+
+
+### Gráfica de barra con plotly()
+
+```{r}
+figura <- plot_ly(
+  x = tabla$x,
+  y = tabla$p.binom,
+  type = "bar",
+  color = "blue"
+)
+
+figura <- figura %>% layout(title = "Probabilidad binomial desde 0 a 4 con 40% Exito",
+         xaxis = list(title = "x"),
+         yaxis = list (title = "Probabilidad"))
+figura
+```
+
