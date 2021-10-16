@@ -2,7 +2,12 @@
 title: "Ejercicio #: título"
 author: "Autor"
 date: "dd/mm/aaaa"
-output: html_document
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
+    toc_depth: 6
 ---
 
 # Objetivo
