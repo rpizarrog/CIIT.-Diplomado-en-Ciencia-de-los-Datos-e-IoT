@@ -12,3 +12,5 @@ datos.personas$estado <- as.factor(datos.personas$estado)
 datos.personas$feliz <- as.factor(datos.personas$feliz)
 
 summary(datos.personas)
+
+datos.personas
