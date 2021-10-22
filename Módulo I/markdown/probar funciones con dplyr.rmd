@@ -1,0 +1,125 @@
+---
+title: "probar funciones con dplyr"
+author: "Rubén Pizarro Gurrola"
+date: "22/10/2021"
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
+    toc_depth: 6
+---
+
+# Objetivo
+
+Proba funcioens de librería dplyr
+
+# Desarrollo
+
+## Cargar librerías
+
+```{r message=FALSE, warning=FALSE}
+library(dplyr)
+library(readr)
+```
+
+## Cargar datos
+
+```{r}
+datos.temperaturas <- read.csv("https://raw.githubusercontent.com/rpizarrog/CIIT.-Diplomado-en-Ciencia-de-los-Datos-e-IoT/main/M%C3%B3dulo%20I/datos/datos.temperaturas.csv", encoding = "UTF8", stringsAsFactors = TRUE)
+
+datos.precipitaciones <- read.csv("https://raw.githubusercontent.com/rpizarrog/CIIT.-Diplomado-en-Ciencia-de-los-Datos-e-IoT/main/M%C3%B3dulo%20I/datos/datos.precipitaciones.csv", encoding = "UTF-8", stringsAsFactors = TRUE)
+```
+
+### Describir los datos
+
+Datos de temperatura
+
+```{r}
+summary(datos.temperaturas)
+
+str(datos.temperaturas)
+```
+
+### Mostrar datos
+
+```{r}
+head(datos.temperaturas, 20)
+tail(datos.temperaturas)
+
+```
+
+## Funciones dplyr
+
+### select
+
+Proyectar variables de un conjunto de datos o seleccionar ciertas columnas del conjunto de datos
+
+```{r}
+select(.data = datos.temperaturas, abreviatura, agnio, ene, feb, mar, abr, may, jun)
+```
+
+### filter
+
+Significa hacer un filtro a nivel de registro u opservaciones. El filtro o subconjunto de datos se hace con una expresión booleana que el resultado sea verdadero entonces se aplica el filtro.
+
+```{r}
+estado <- filter(datos.temperaturas, abreviatura == 'COAH')
+estado
+
+```
+
+### pipes
+
+En R el símbolo de %\>% usando la librería *dplyr* significa que el resultado de una expresión es la entrada de otra expresión
+
+```{r}
+estado <- filter(datos.temperaturas, abreviatura == 'YUC' ) %>%
+  select(abreviatura, agnio, ene, feb, mar, abr, may, jun)
+
+estado
+
+```
+
+### Estados que son frontera con USA
+
+```{r}
+estados.frontera <- c('BC', 'SON', 'CHIH', 'COAH', 'NL', 'TAMPS')
+
+estado <- filter(datos.temperaturas, abreviatura %in% estados.frontera ) %>%
+  select(abreviatura, agnio, ene, feb, mar, abr, may, jun)
+
+#estado <- filter(datos.temperaturas, abreviatura == 'BC' | abreviatura == 'SON' | abreviatura == 'CHIH' | abreviatura == 'COAH' | abreviatura == 'NL' | abreviatura == 'TAMPS') %>%
+ # select(abreviatura, agnio, ene, feb, mar, abr, may, jun)
+
+
+```
+
+
+### Ordenar datos
+```{r}
+arrange(estado, abreviatura, desc(agnio))
+```
+
+### Agregar columnas
+
+Con la función  mutate se agregan columnas o modifica valores de variables en el conjunto de datos
+
+```{r}
+estado.modificado <- mutate(estado, abrev.minusc = tolower(abreviatura))
+estado.modificado
+```
+
+
+### Funciones de agregado
+
+Agrupar datos y calcular alguna funcion mean(), n() o sd()
+
+
+# gropy_b
+# summarize()
+
+```{r}
+# pendiente
+```
+

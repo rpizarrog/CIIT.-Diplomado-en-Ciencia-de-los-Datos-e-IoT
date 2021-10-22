@@ -37,7 +37,7 @@ media <- 25
 desv <- 5
 ```
 
-### Dibujar una gráfica de campana 
+### Dibujar una gráfica de campana
 
 ### Probabilidad de 25 años
 

@@ -1,0 +1,112 @@
+---
+title: "Visualización de variables discretas"
+author: "Rubén Pizarro Gurrola"
+date: "19/10/2021"
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
+    toc_depth: 6
+---
+
+# Objetivo
+
+Visualizar e interpretar variables discretas con librerías lattice y mosaic
+
+# Descripción
+
+De un conjunto de datos visualizar gráfica de barras de variables discretas.
+
+# Desarrollo
+
+## Cargar librerías
+
+```{r message=FALSE, warning=FALSE}
+library(mosaic)
+# library(lattice)
+
+```
+
+## Cargar datos
+
+Se construyen datos ejecutando el código que se encuentra en el enlace github: <https://raw.githubusercontent.com/rpizarrog/CIIT.-Diplomado-en-Ciencia-de-los-Datos-e-IoT/main/M%C3%B3dulo%20I/SESI%C3%93N%206/scripts/generar%20personas.r>\
+
+```{r}
+source("https://raw.githubusercontent.com/rpizarrog/CIIT.-Diplomado-en-Ciencia-de-los-Datos-e-IoT/main/M%C3%B3dulo%20I/SESI%C3%93N%206/scripts/generar%20personas.r", encoding = "UTF-8")
+
+head(datos.personas)
+tail(datos.personas)
+```
+
+
+## Descripción de los datos
+
+```{r}
+summary(datos.personas)
+str(datos.personas)
+
+```
+
+## Formatear datos
+```{r}
+datos.personas$genero <- as.factor(datos.personas$genero)
+datos.personas$estado <- as.factor(datos.personas$estado)
+datos.personas$feliz <- as.factor(datos.personas$feliz)
+
+summary(datos.personas)
+
+
+```
+
+## Visualizar frecuencias 
+
+### Variable genero
+
+```{r}
+bargraph( ~ genero, data = datos.personas, 
+          main = "Gráfico de Barras")
+
+```
+
+### Variable estado
+
+```{r}
+bargraph( ~ estado, data = datos.personas, 
+          main = "Gráfico de Barras")
+
+```
+
+
+### Variable feliz
+
+```{r}
+bargraph( ~ feliz, data = datos.personas, 
+          main = "Gráfico de Barras")
+
+```
+
+## Combinando variables 
+
+### Feliz con agrupados por genero
+
+```{r}
+bargraph(~ feliz, groups=genero, data = datos.personas, type = "percent",
+         main = "Gráfico de Barras combinando variables")
+```
+
+### Feliz con agrupados por estado
+
+```{r}
+bargraph(~ feliz, groups=estado, data = datos.personas, type = "percent",
+         main = "Gráfico de Barras combinando variables")
+```
+
+# Interpretación
+
+¿Qué porcentaje de personas son del género masculino y femenino respectivamente?
+¿Qué estados de la República Mexicana presentan mayor frecuencia de participantes?
+¿Hay más personas felices que no felices?
+¿Quien son más felices hombres o mujeres y por el conTrario quienes son más no felices hoMbres o mujeres?
+¿Qué estados de la República Mexicana presentan que son m+as felices y menos felies o NO FELICES?
+
