@@ -113,13 +113,60 @@ estado.modificado
 
 ### Funciones de agregado
 
-Agrupar datos y calcular alguna funcion mean(), n() o sd()
+Agrupar datos y calcular alguna función mean(), n() o sd()
 
-
-# gropy_b
-# summarize()
+group_by
+summarize()
 
 ```{r}
-# pendiente
+estado %>%
+summarise(media.ene = mean(ene), n = n())
+
+  
 ```
+
+Ahora agrupados por estado
+
+```{r}
+estado %>%
+  group_by(abreviatura) %>%
+summarise(media.ene = mean(ene), n = n())
+
+```
+
+
+# Simular con datos de personas
+
+## Cargar los datos 
+```{r}
+personas <- read.csv("https://raw.githubusercontent.com/rpizarrog/CIIT.-Diplomado-en-Ciencia-de-los-Datos-e-IoT/main/M%C3%B3dulo%20I/datos/datos.personas.csv", encoding = "1859-1", stringsAsFactors =TRUE)
+
+
+```
+
+### Describir los datos
+```{r}
+summary(personas)
+str(personas)
+```
+
+### Mostrar datos
+```{r}
+head(personas)
+tail(personas)
+```
+
+¿Cuáles y cuántas personas son del genero FEMENINO del estado de BAJA CALIFORNIA que sean FELIZ?
+
+Se utiliza operador and &
+
+```{r}
+filtro <- filter(personas, genero == 'FEMENINO' & estado == 'BAJA CALIFORNIA' & feliz =='FELIZ' ) %>%
+  select(genero, estado, feliz)
+
+summary(filtro)
+
+```
+
+
 
