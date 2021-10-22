@@ -1,0 +1,93 @@
+---
+title: "Interpretar probabilidad distribucion normal"
+author: "Rubén Pizarro Gurrola"
+date: "16/10/2021"
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
+    toc_depth: 6
+---
+
+# Objetivo
+
+Interpretar distribucines de probabilidad
+
+# Descripción
+
+Dibujar la gráfica de gauss o campana con parámetros de una distribución normal e interpretar probabildiades Párrafo en lo general de lo que hace y como el ejercicio
+
+# Desarrollo
+
+## Cargar librerías
+
+```{r message=FALSE, warning=FALSE}
+library(mosaic)
+```
+
+### Inicializar variables
+
+Las distribuciones normales requieren por lo menos la media y desviación estándard.
+
+Suponer que indagar las edades de personas cuya media es 25 años y desviación 5
+
+```{r}
+media <- 25
+desv <- 5
+```
+
+### Dibujar una gráfica de campana 
+
+### Probabilidad de 25 años
+
+```{r}
+plotDist(dist = "norm", mean = media, sd = desv, groups = x <=25, type = "h", xlab = "Edades", ylab = "Densidad" )
+```
+
+¿Cuál es el valor de la de función de probabilidad del área sombrada?, ¿Que porcentaje represente el área en color rosa?, ¿Cuál es la probabilidad de elegir a una persona que tenga menos de 25 años?
+
+```{r}
+prob = pnorm(q = 25, mean = 25, sd = 5)
+
+paste("La probabilid del área sombreada es de: ", prob)
+
+```
+
+### Probabilidad de 20 a 25
+
+¿Cuál es la probabilidad de elegir a una persona entre 22 y 24 años?., cuya media de los es 25 y desv. std. es 4.
+
+```{r}
+plotDist(dist = "norm", mean = media, sd = desv, groups = x >22 & x<24, type = "h", xlab = "Edades", ylab = "Densidad" )
+```
+
+Solución
+
+```{r}
+prob = pnorm(q = 24, mean = 25, sd = 5) - pnorm(q = 22, mean = 25, sd = 5)
+
+paste("La probabilid del área sombreada es de: ", prob)
+
+```
+
+\#\#\# Números aleatorios
+
+```{r}
+aleatorios <- rnorm(n = 50, mean = media, sd = 4)
+
+aleatorios
+
+```
+
+Determinar media y desviación de los aleatorios
+
+```{r}
+mean(aleatorios)
+sd(aleatorios)
+
+```
+
+# Interpretación
+
+Descripción a título personal de lo que hace el ejercicio
