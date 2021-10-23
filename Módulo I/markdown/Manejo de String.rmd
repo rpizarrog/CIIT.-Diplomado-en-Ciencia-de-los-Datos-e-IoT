@@ -1,0 +1,238 @@
+---
+title: "Manejo de String"
+author: "Rubén Pizarro Gurrola"
+date: "23/10/2021"
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
+    toc_depth: 6
+---
+
+# Objetivo
+
+Manipular expresiones String
+
+# Desarrollo
+
+## Cargar librerías
+
+```{r message=FALSE, warning=FALSE}
+# Algunas librerías
+library(dplyr)
+library(stringr)
+# library(stringi)
+```
+
+```{r}
+texto <- "esto un es un simple texto. Bueno dias salud hola"
+texto
+```
+
+### substring()
+
+```{r}
+texto %>% substring(first = 1, last = 5)
+
+substring(text = texto, first = 1, last = 5)
+
+
+```
+
+Extraer del caracter 9 al 20 de texto
+
+```{r}
+extraer <- substring(first = 9, last = 20, text = texto)
+extraer
+```
+
+### Longitud de una vector caracter nchar()
+
+```{r}
+nchar(texto)
+```
+
+### toupper() y tolower()
+
+```{r}
+tolower("HOLA COMO ESTAS") %>% substr(1,4)
+toupper("saludos desde R Studio") %>% substr(15, stop = nchar("saludos desde R Studio"))
+```
+
+### Funciones de string
+
+Se utilizan funciones de la librería stringr y se utiliza de base el tutorial:<https://r4ds.had.co.nz/strings.html>
+
+```{r}
+string1 <- "Esto es un string"
+string2 <- 'Algunas "comillas" debe de comillas'
+string3 <- "otras 'comilla simple' dentro de comillas dobles"
+string1; string2; string3
+
+```
+
+Declarar comillas dobles y sencillas
+
+```{r}
+comillas_dobles <- "\"" # or '"'
+comilla_sencilla <- '\'' # or "'"
+
+
+comillas_dobles; comilla_sencilla
+
+
+
+
+```
+
+### Manejando ENTER y tabuladores
+
+Pendiente
+
+```{r}
+texto <- "hola como estas saludos. Estamos en R y R Studio"
+texto
+
+```
+
+### str_length()
+
+Cantidad de caracteres
+
+```{r}
+str_length(c("H", "R for data science", NA))
+nchar(c("H", "R for data science", NA))
+str_count(c("H", "R for data science", NA))
+
+```
+
+### Concatener string
+
+paste() ó str_cp()
+
+```{r}
+str1 <- "hola"
+str2 <- "como estás"
+
+paste(str1, str2, sep = " ")
+
+str_c(str1, str2, sep = " ")
+
+```
+
+### str_replace
+
+```{r}
+frutas <- c("one apple", "two pears", "three bananas", "uvas", "naranjas", "tomate")
+frutas
+print(" ")
+
+cambios <- frutas %>% str_replace("[aeiou]", "-")
+cambios
+
+```
+
+### Texto extraño
+
+```{r}
+texto_extranio <- "Erase una vez / n / t con algunas cosas $ % & SIN SENTIDO"
+
+texto_limpio <- texto_extranio %>% str_replace("/", ' ')
+texto_limpio
+
+texto_limpio <- texto_extranio %>% str_replace("$", ' ')
+texto_limpio
+
+texto_limpio <- texto_extranio %>% str_replace("&", ' ')
+texto_limpio
+
+texto_limpio <- texto_extranio %>% str_replace("%", ' ')
+texto_limpio
+
+
+
+
+```
+
+### mayusculas y minusculas 
+
+```{r}
+str_to_upper(c("i", "ı"))
+#> [1] "I" "I"
+str_to_upper(c("i", "ı"), locale = "tr")
+
+str_to_upper(c("ñ"), locale = "es")
+
+
+```
+
+### Ordenar elementos de un vector
+
+```{r}
+x <- c("zanhoria","apple", "eggplant", "banana", "naranja")
+
+str_sort(x, locale = "sp") 
+
+sort(x)
+
+```
+
+### Encontrar patrones
+
+```{r}
+x <- c("apple", "banana", "pear", "experimentando", "experiencia", "exposiciones", "no exporta")
+todo.con.exp <- str_view(x, "exp")
+todo.con.exp
+
+```
+
+### Patrones específicos
+
+```{r}
+# Todos lo que inicie con 
+str_view(x, "^a")
+str_view(x, "^ex")
+str_view(x, "exp")
+```
+
+### detectar caracteres
+
+```{r}
+x <- c(x, c('axioma', "exercise"))
+x
+
+str_detect(x, "e") # Las que tengan e
+str_detect(x, "ex") # Las que tengan ex
+str_detect(x, "^ex") # Las que inicien con ex
+str_detect(x, "^[ax|ex]")
+
+# Devolviendo las palabras que inicen con ex o ax
+x[str_detect(x, "^[ax|ex]")]
+
+```
+
+### Trabajando gsub y sub con un data.frame
+
+Cerando data.frame
+
+```{r}
+#creating a data frame
+df<-data.frame(Column_1 = c('Florida','Germany','Georgia','Geniva','Istanbul','NewZealand','Australia'), Column_2=c(1,2,3,4,5,6,7))
+ 
+#data frame
+df
+```
+
+Evaluando el df con sub y gsub
+
+```{r}
+# Reemplazar G con A
+sub('G','A',df)
+
+```
+
+```{r}
+#substituting the values
+sub('G','A',df$Column_1)
+```
