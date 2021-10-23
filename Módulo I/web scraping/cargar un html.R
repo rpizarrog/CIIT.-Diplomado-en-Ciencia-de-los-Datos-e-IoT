@@ -10,7 +10,7 @@ contenido
 
 length(contenido)
 
-sapply(contenido, function(x) dim(html_table(x, fill = TRUE)))
+sapply(contenido, function(x) dim(html_table(x, fill = TRUE))) # Cuandos renglsn y clumnas tienen las tablas
 
 tabla <- html_table(contenido[[5]])
 tabla
