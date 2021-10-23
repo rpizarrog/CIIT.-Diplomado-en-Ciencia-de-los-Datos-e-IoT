@@ -1,0 +1,159 @@
+---
+title: "R Notebook"
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
+    toc_depth: 6
+---
+
+# Objetivo
+
+Probar funciones de librería *lubridate*
+
+## Desarrollo
+
+### Cargar librerías
+
+```{r message=FALSE, warning=FALSE}
+library(lubridate)
+library(dplyr)
+```
+
+Dato tipo fecha
+
+```{r}
+hoy <- Sys.Date()
+hoy
+
+```
+
+Funciones con lubridate
+
+```{r}
+ahora <- today()   # Fecha de hoy yyyy-mm-dd
+ahora
+
+hoyhoy <- now()  # Fecha con hora
+hoyhoy
+
+maniana.en.ocho <- today() + 8   # Agregando dias a la fecha de 
+maniana.en.ocho
+
+
+```
+
+### Crear fechas con ymd
+
+```{r}
+ymd("1969-11-06")
+
+mdy("1969-11-06")  # No funciona
+
+ymd(19691106); ymd(20211023)
+
+mdy(19691106)  # No funciona
+
+ymd_hms("2017-01-31 20:11:59")
+
+mdy_hm("01/31/2017 08:01")
+
+ymd(20170131, tz = "America/Mexico_City")
+
+```
+
+### Personalizando fechas con mdy() y dmy()
+
+```{r}
+mdy("enero 31, 2021")
+mdy("Octubre 23th, 2021")
+mdy("January 31st, 2017")
+mdy("Januar 31st, 2017") # Germany
+#> [1] "2017-01-31"
+dmy("31-Jan-2017") 
+#> [1] "2017-01-31"
+dmy("23-Oct-2021")
+
+
+mdy(paste(month.abb, " 20, 2017")) # cualqueiri mes abreviado
+```
+
+### Crear fechas por partes
+
+```{r}
+mifecha <- make_date(year = 1969, month = 11, day = 6)
+mifecha
+
+```
+
+### Como conocer el tipo de dato fecha
+
+```{r}
+mifecha
+paste(class(mifecha))
+print(typeof(mifecha))
+
+
+```
+
+### Extraer partes de una fecha
+
+```{r}
+mifecha
+
+year(x = today())
+
+year(x = mifecha)
+
+month(mifecha); class(month(mifecha))
+
+day(mifecha)
+
+quarter(mifecha)
+
+wday(mifecha)  # dia de la semana
+
+
+weekdays(today())   # Pauete base
+
+weekdays(mifecha)   # Dia en que nací
+
+```
+
+### Simular un data.frame a partir de elementos de fecha
+
+Construyendo el data.frame datos
+
+```{r}
+set.seed(2021)
+
+agnio <- round(rnorm(n = 100, mean = 1975, sd = 5))
+mes <- sample(x = 1:12, size = 100, replace = TRUE)
+dia <- sample(x = 1:28, size = 100, replace = TRUE)
+
+datos <- data.frame(agnio,mes,dia)
+
+head(datos)
+
+summary(datos)
+
+```
+
+Construir una variable fecha
+
+```{r}
+datos %>%
+    select(agnio, mes, dia) %>%
+  filter(agnio == 1969)
+```
+
+Agregar nueva variable
+
+```{r}
+datos <- datos %>%
+  mutate(fecha = make_date(year=agnio, month = mes, day = dia)) %>%
+  head(10)
+
+tail(datos)
+```
