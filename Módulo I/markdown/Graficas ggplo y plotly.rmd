@@ -1,0 +1,95 @@
+---
+title: "Gráficas ggplot y plotly"
+author: "Rubén Pizarro Gurrola"
+date: "15/10/2021"
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
+    toc_depth: 6
+---
+
+# Objetivo
+
+Generar gráficas con librería ggplot y plotly
+
+# Desarrollo
+
+## Las librerías
+```{r message=FALSE, warning=FALSE}
+library(ggplot2)
+library(plotly)
+library(fdth)
+```
+
+## Los datos
+```{r}
+personas <- read.csv("https://raw.githubusercontent.com/rpizarrog/CIIT.-Diplomado-en-Ciencia-de-los-Datos-e-IoT/main/M%C3%B3dulo%20I/datos/datos.personas.csv", encoding = "1859-1", stringsAsFactors =TRUE)
+
+head(personas)
+str(personas)
+summary(personas)
+```
+
+### Gráfica de barra con ggplot
+
+
+#### Preparando una tabla de distribución 
+
+Variable estado
+```{r}
+tabla <- data.frame(fdt_cat(personas$estado))
+tabla
+```
+
+
+### Gráfica normal 
+```{r}
+barplot(height = tabla$f, names.arg = tabla$Category)
+```
+
+
+### Gráfica con ggplot
+
+De donde obtener los dato o data
+```{r}
+
+ggplot(data = tabla)
+```
+
+
+Construye los ejes x & y con aes()
+```{r}
+ggplot(data = tabla, aes(x = Category, y = f))
+```
+
+Agregar el elemento geométrico
+```{r}
+ggplot(data = tabla, aes(x = Category, y = f)) +
+  geom_bar(stat = 'identity')
+```
+
+
+Agregar por partes en una variable
+```{r}
+g <- ggplot(data = tabla)
+g <- g + aes(x = Category, y = f)
+g <- g + geom_bar(stat = 'identity')
+g
+```
+
+
+### Gráfica con plotly
+
+
+```{r message=FALSE, warning=FALSE}
+plot_ly(personas, x = ~estado)
+```
+
+
+Varias lineas por genero
+```{r}
+# Pendiente ....   
+```
+
