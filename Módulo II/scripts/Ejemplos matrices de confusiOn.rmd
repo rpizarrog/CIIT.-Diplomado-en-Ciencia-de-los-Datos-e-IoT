@@ -1,0 +1,202 @@
+---
+title: "Ejemplos matrices de confusión"
+author: "Rubén Pizarro Gurrola"
+date: "25/6/2021"
+output: 
+  html_document:
+    code_folding: hide
+---
+
+# Objetivo
+
+Simular matrices de confusiones para identificar métricas
+
+# Descripción
+
+Se generan matrices de confusiones por medio de las funciones *rbinom()* con valores entre 0 y 1.
+
+Se transforman matrices de confusiones con valores de 0 = 'NO' Y 1 ='SI' para observar alternativas de interpretación.
+
+# Desarrollo
+
+## Cargar librerías
+
+```{r message=FALSE, warning=FALSE}
+library(ggplot2) # PAra gráficos
+library(dplyr)   # Para operaciones con datos
+library(caret)  # Para arboles y matrices de confusión
+
+```
+
+## Generar datos
+
+### Datos aleatorios
+
+S define una semilla, *set.seed(2021)* que significa que se generan mismos valores aleatorios cada vez que se se ejecuta el código y se construye el documento.
+
+-   Se generan 100 valores reales y de predicción.
+
+-   El 80% de los valores reales son casos positivos.
+
+-   El 90% de los valores predichos son casos positivos.
+
+-   Positivos = 1
+
+-   Negativos = 0
+
+```{r}
+set.seed(2021) 
+n <- 100
+reales <- rbinom(n = n, size = 1, prob = 0.80)
+reales
+
+predichos <- rbinom(n = n, size = 1, prob = 0.80)
+predichos
+
+datos <- data.frame(reales, predichos)
+datos
+
+```
+
+¿Cuántos son valores positivos y negativos de casos reales de los 100 registros?
+
+```{r}
+
+count(x = datos, reales)
+```
+
+¿Cuántos son valores positivos y negativos de casos predichos de los 100 registros?
+
+```{r}
+count(x = datos, predichos)
+
+```
+
+## Matriz de confusión
+
+```{r}
+matriz <- table(datos)
+matriz
+
+
+```
+
+### Evaluación de la matriz de confusión
+
+Se determinan las métricas de exactitud, precisión, sensibilidad, especificidad y F1 a partir de los valores TP, FP, FN, TN.
+
+#### Valores
+
+Se determinan los valores negativos: TN y FN; los positivos: FP y TP; a partir de la matriz de confusión.
+
+**Verdadero = TRUE** significa que acierta
+
+**Falso = FALSE** significa que no acierta
+
+![Matriz de confusión](images/matriz%20de%20confusion-04.jpg "Matriz de confusión")
+
+```{r}
+TN <- matriz[1,1] # Primer renglón y columnas
+cat('TN=', TN)
+
+
+FN <- matriz[2,1]
+cat('FN=', FN)
+
+FP <- matriz[1,2]
+cat('FP=', FP)
+
+TP <- matriz[2,2] # Segundo renglón y columnas
+cat('TP=', TP)
+
+
+# Valors constantes de ejercicio
+# TN = 70; FP = 10; FN = 15; TP = 5
+ TN = 993; FP = 107; FN = 316; TP = 176
+
+
+```
+
+#### Accuracy = Exactitud
+
+```{r}
+exactitud <- (TP + TN) / sum(FN, TN, FP, TP)
+exactitud
+
+```
+
+Puede generarse de otro modo:
+
+```{r}
+
+accuracy = sum(diag(matriz)) / sum(matriz)
+accuracy
+```
+
+#### Precision = Precisión
+
+Precisión de la clase positivos, o sea 1's.
+
+```{r}
+precision <- TP / (TP + FP)
+precision
+
+```
+
+Significa que en términos de calidad el modelo predice correctamente clases positivas = 1 en un `r precision * 100` %.
+
+#### Recall = Sensibilidad
+
+```{r}
+sensibilidad <- TP / (FN + TP)
+sensibilidad
+```
+
+Significa que en términos de cantidad de valores positivos reales que fueron clasificados correctamente es de `r sensibilidad * 100` %.
+
+#### Specifity = Especificidad
+
+```{r}
+especificidad <- TN / (TN + FP)
+especificidad
+```
+
+La especificad significa los casos negativos reales que el clasificador predice correctamente, es decir, el modelo tiene un `r especificidad * 100`% de casos negativos predichos correctamente.
+
+#### F1 Score
+
+```{r}
+f1.score <- 2 * (precision * sensibilidad) / (precision + sensibilidad)
+f1.score
+
+```
+
+### Matriz de confusión con *caret*
+
+Se construye matriz de confusión con la función *confusionMatrix()* de la librería *caret.*
+
+Antes se categorizan o factorizan los valores de datos
+
+```{r}
+datos$reales <- as.factor(datos$reales)
+datos$predichos <- as.factor(datos$predichos)
+str(datos)
+
+```
+
+```{r}
+matriz.2 <- confusionMatrix(datos$reales, datos$predichos)
+
+matriz.2
+
+```
+
+## Simulando Personas con COVID
+
+-   Persona que tiene covid19 y el modelo lo clasificó como covid19 (+) . Esto sería un **verdadero positivo** o VP o TP.
+
+-   Persona que no tiene covid19  y el modelo lo clasificó como covid19 (-) . Este seria un **verdadero negativo** o sea un VN o TN.
+
+-   Persona que tiene covid19 y el modelo lo clasificó como covid19 (-) .  Éste seria un error tipo II o **falso negativo** o FN .
+
+-   Persona que no tiene covid19  y el modelo lo clasificó como covid19 (+) . Este es un error tipo I,  o **falso positivo** o FP.

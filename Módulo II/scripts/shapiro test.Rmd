@@ -1,0 +1,165 @@
+---
+title: "Prueba de Normalidad shapiro test"
+author: "Rubén Pizarro Gurrola"
+date: "28/5/2021"
+output: 
+  html_document: 
+    toc: yes
+    toc_depth: 5
+    code_folding: hide
+    toc_float: yes
+    number_sections: yes
+bibliography: references.bib
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+# Objetivo
+
+Simular datos e una muestra de distribución normal y hacer la prueba de
+Shapiro.
+
+# Descripción
+
+Datos aleatorios de 50 estudiantes con valores de edades (valores
+enteros) de una distribución normal de media igual a 20 y desviación
+igual a 2.
+
+# Fundamento teórico
+
+La prueba shapiro test se emplea para contrastar normalidad cuando el
+tamaño de la muestra es menor de 50. Para muestras grandes es
+equivalente al test de kolmogorov-Smirnov [@garavito2018].
+
+Se busca comprobar lo siguiente:
+
+-   H0: los datos NO se distribuyen normalmente
+
+-   H1: los datos SI se distribuyen normalmente
+
+¿De dónde se formula la hipótesis nula? La hipótesis nula es un mpetodo
+de la estadística que trata de probarse y normalmente es lo contrario
+(lo absurdo) de lo que se desea investiagar o probar. Hasta que los
+datos y pruebas obtenidas demuestran que el punto de partida era falso o
+absurdo y, por tanto, se rechaza la hipótesis nula.
+
+La hipótesis nula generalmente **incluye un *no*** en su enunciado.
+
+En términos de investigación, se concluye que la hipótesis de
+investigación es verdadera si los datos muestrales contradicen la
+hipótesis nula.[@anderson2008].
+
+Con el *P -Value* obtenido de las pruebas Shapiro se debe compar con los
+niveles de confianza $\alpha$ para RECHAZAR o ACEPTAR la H0 según el
+nivel de confianza.
+
+-   Si *P -Value* es MENOR a $\alpha=.1$ el nivel de confianza es del
+    $90%$ se RECHAZA H0.
+
+-   Si *P -Value* es MENOR a $\alpha=0.05$ el nivel de confiazan es del
+    $95%$ se RECHAZA H0 en ese nivel de confianza.
+
+-   Si *P -Value* es MENOR a $\alpha=0.01$ es el nivel de confianza del
+    $99%$ se RECHAZA H0 en ese nivel de confianza.
+
+Si *P -Value* es menor que $\alpha$, se puede decir que se tiene un
+resultado estadísticamente significativo que permite rechazar H0.
+
+# Desarrollo
+
+## Datos 
+
+Se genera la muestra
+
+```{r}
+datos <- round(rnorm(n = 50, mean = 20, sd = 2) ,0)
+datos
+
+```
+
+## Gráfica de Histograma
+
+Se observa una posible curva de campana perfectamente bien distribuida,
+tal vez con poco sesgo y simétrica.
+
+```{r}
+hist(datos)
+
+```
+
+## Prueba Shapiro-Wilk
+
+### Hipótesis
+
+```{r}
+H0 <- "Los datos NO se distribuyen normalmente"
+
+H1 <- "Los datos SI se distribuyen normalmente"
+
+```
+
+### Niveles de confianza
+
+```{r}
+nivel_confianza.01 <- 0.01 # 99%
+nivel_confianza.05 <- 0.05 # 95%
+nivel_confianza.10 <- 0.10 # 90%
+
+
+```
+
+### La prueba
+
+La prueba consiste en considerar como hipótesis nula que los datos sí
+proceden de una distribución normal y como hipótesis alternativa que no
+lo hacen.
+
+El *p-value* de estos test indica la probabilidad de obtener una
+distribución como la observada si los datos proceden realmente de una
+población con una distribución normal.
+
+Los niveles de confianza significan la probabilidad de que haya un valor
+en la distribución normal con ese nivel de confianza.
+
+S el valor de *p-value* es mayor que los niveles de confianza entonces
+se rechazan las hipótesis.
+
+```{r}
+prueba <- shapiro.test(datos)
+
+prueba
+
+prueba$p.value
+
+```
+
+```{r}
+if (prueba$p.value < nivel_confianza.01 ) {
+  paste("Confianza al 99%", "Se RECHAZA HO: entonces H1", H1) } else {
+    paste("Confianza al 99%", "Se ACEPTA HO:", H0)
+  }
+
+```
+
+```{r}
+if (prueba$p.value > nivel_confianza.05 ) {
+  paste("Confianza al 95%", "Se RECHAZA HO: entonces H1", H1) } else {
+    paste("Confianza al 95%", "Se ACEPTA HO:", H0)
+  }
+
+```
+
+```{r}
+if (prueba$p.value < nivel_confianza.10 ) {
+  paste("Confianza al 90%", "Se RECHAZA HO: entonces H1", H1) } else {
+    paste("Confianza al 90%", "Se ACEPTA HO:", H0)
+  }
+
+```
+
+## OTRAS PRUEBAS de normalidad en los datos
+
+Pendiente
+
+# Referencias bibliográficas

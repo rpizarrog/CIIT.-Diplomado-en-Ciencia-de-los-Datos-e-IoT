@@ -1,0 +1,491 @@
+---
+title: "Arboles de Decisión. Arboles de Regresión"
+author: "Rubén Pizarro Gurrola"
+date: "27/5/2021"
+output: 
+  html_document: 
+    toc: yes
+    toc_depth: 5
+    code_folding: hide
+    toc_float: yes
+    number_sections: yes
+bibliography: references.bib
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+# Objetivo
+
+Analizar y predecir datos mediante la construcción de un modelo basado
+en el algoritmo de árbol de decisión CART (Clasification and Regresion
+Tree) utilizando la librería del mismo nombre CART.
+
+# Descripción
+
+Se presenta dos análisis con árboles de regresión
+
+El primer ejercicio es con datos relacionados con consumo de gasolina de
+autos a partir de los datos *table_b3* que pertenecen al paquete MPV.
+
+El segundo ejercicio es con los datos de promedio de alumnos que se usó
+para regresión múltiple.
+
+El modelo de arboles de regresión se puede comparar con otros modelos
+por ejemplo el de regresión múltiple.
+
+Se utiliza la librería *rpart()*.
+
+# Marco Teórico
+
+Actualmente los términos Inteligencia Artificial y *machine learning* se
+usan indistintamente, se presenta una distinción: mientras que los
+primeros algoritmos de inteligencia artificial, como los utilizados por
+las máquinas de ajedrez, implementaron la toma de decisiones según
+reglas programables derivadas de la teoría o de los primeros principios,
+en *machine learning* las decisiones de aprendizaje se basan en
+algoritmos **que se construyen con datos**. [@irizarry2021].
+
+Los arboles de decisión son representaciones gráficas de posibles
+soluciones a una decisión basadas en ciertas condiciones, es uno de los
+algoritmos de aprendizaje supervisado más utilizados en machine learning
+y pueden realizar tareas de clasificación o regresión [@bagnato2020].
+Precisamente los árboles de decisión se interpretan amigablemente en
+comparación con otros métodos de regresión por su fácil interpretación y
+útil representación gráfica.
+
+Sin embargo si el árbol está muy ramificado esto en lugar de ayudar
+estorba, pero para ello existen las reglas de decisión que soportan el
+gráfico del árbol.
+
+Los árboles de regresión y/o clasificación fueron propuestos por [Leo
+Breiman](https://en.wikipedia.org/wiki/Leo_Breiman) en el libro
+([Breiman et al.
+1984](https://fhernanb.github.io/libro_mod_pred/references.html#ref-Breiman1984))
+y son árboles de decisión que tienen como objetivo predecir la variable
+respuesta Y en función de covariables. [@hernández2020].
+
+Los árboles se pueden clasificar en dos tipos que son:
+
+1.  Árboles de regresión en los cuales la variable respuesta o vaiable
+    dependiente $y$ es cuantitativa.
+
+2.  Árboles de clasificación en los cuales la variable respuesta o
+    variable dependiente $y$ es cualitativa.
+
+Se necesita una variable dependiente $Y$ y varias variables
+independiente $x_1, x_2, x_3, …x_n$. Se genera un conjunto de reglas
+sucesivas que ayudan a tomar una decisión, con ellas se puede predecir
+valores.
+
+# Desarrollo
+
+## Cargar librerías
+
+Cada uno de los paquetes o librerías se se cargan deben estar
+previamente instalados con la función *install.packages("nombre del
+paquete o librería")*
+
+El paquete *rpart* es uno de los paquetes que se pueden usar para crear
+árboles de regresión.
+
+```{r message=FALSE, warning=FALSE}
+# Librerías para árboles
+library(rpart) # Para crear arboles
+library (MPV) # Previo install.packages("MPV")
+library(tree) # Para crear arboles
+library(party) # Para particionar datos
+library(rpart.plot) # Para visualizar arbol
+
+# Librerías varias
+library(readr)   # Leer datos
+library(dplyr)   # Operaciones con datos, select, filter, mutate, arrange, summarize group_by %>%
+library(knitr)   # Tablas amigables
+library(ggplot2) # Gráficos
+library(cowplot) # Varios gráficos en un mismo renglón
+library(fdth)    # para el calculo de distribución de frecuencias.
+
+```
+
+
+## Consumo de gasolina autos
+
+Se cargan datos de automóviles. En este ejemplo se busca encontrar un
+modelo de regresión lineal que explique la variable respuesta $y$ en
+función de las covariables $x_1, x_2, x_3 … x_{11}$.
+
+### Los datos
+
+Se trata de un conjunto de datos que tiene variables principalmente
+cuantitativas continuas, las variables de interés es el consumo de
+gasolina, es decir millas por galón de cada auto.
+
+Se trata de predecir el consumo de gasolina con atributos similares de
+un nuevo automóvil.
+
+Los datos se obtienen a partir del conjunto de datos *table_b3* que
+pertenecen al paquete MPV y que se cargan a memoria automáticamente.
+
+![Imagen 1. Autos gasolina millas por galón. Fuente:
+[@hernández2020]](images/autos%20gasolina%20millas%20por%20galOn-01.jpg "autos gasolina millas por galón")
+
+Se usa la tradicional variable llamada *datos* para identificarlos
+
+```{r}
+datos <- table.b3
+```
+
+#### Describir los datos
+
+Se trata de un conjunto de datos que tiene variables principalmente
+cuantitativas continuas
+
+```{r}
+summary(datos)
+str(datos)
+
+```
+
+```{r}
+#kable(head(datos), caption = "Autos ,primeros seis")
+#kable(tail(datos), caption = "Autos, últimos seis")
+kable(datos, caption = "Los datos de autos", row.names = TRUE)
+
+```
+
+#### Variable dependiente e independientes
+
+La variable dependiente o de respuesta $Y$ es el consumo millas por
+galón.
+
+Las demás se identifican como variable independientes
+
+### Preparar los datos
+
+El proceso de preparación de los datos, implica limpieza a los mismos,
+algunas veces, se transforman variables, se decodifican o mapean
+variables, se encuentran valores nulos o NA y se tienen que tomar la
+decisión de dejarlos y modificarlos o quitarlos, depurar, alterar,
+estandarizar, escalar, entre otras acciones, en pocas palabras dejarlos
+listos para su tratamiento, es decir, se busca calidad en los datos.
+
+El proceso de preparación normalmente es costoso en términos
+programación, para algunos puede ser tedioso y aburrido, sin embargo el
+significado es tal que si los datos están adecuados, entonces hay
+confianza de que los modelos que se construyen a partir de ellos serán
+adecuados.
+
+#### Quitar NA en renglones 23 y 25
+
+Se observa que existen NA en los registros 23 y 25 de la columna X3.
+
+Se determina la media de x3 de los datos sin considera los valores NA.
+
+```{r}
+media <- mean(datos$x3, na.rm = TRUE)
+media
+```
+
+Se toma la decisión de actualizar los valores de acuerdo a la media
+
+```{r}
+datos <- mutate(datos, x3 = ifelse(is.na(x3), media, x3))
+
+```
+
+```{r}
+kable(datos, caption = "Los datos de autos", row.names = TRUE)
+
+```
+
+### Construir el modelo
+
+```{r}
+modelo <- rpart(formula = y ~ ., data=datos )
+modelo
+
+summary(modelo)
+
+```
+
+#### Dibujar el modelo
+
+```{r}
+prp(modelo)
+
+# mas amigable
+
+prp(modelo, main="Arbol de regresión",
+    nn = TRUE, # display the node numbers
+    fallen.leaves = TRUE,  # put the leaves on the bottom of the page
+    shadow.col = "gray",   # shadows under the leaves
+    branch.lty = 3,        # draw branches using dotted lines
+    branch = .5,           # change angle of branch lines
+    faclen = 0,            # faclen = 0 to print full factor names
+    trace = 1,             # print the auto calculated cex, xlim, ylim
+    split.cex = 1.2,       # make the split text larger than the node text
+    split.prefix = "is ",  # put "is " before split text
+    split.suffix = "?",    # put "?" after split text
+    split.box.col = "lightblue",   # lightgray split boxes (default is white)
+    split.border.col = "darkgray", # darkgray border on split boxes
+    split.round = 0.5)             # round the split box corners a tad
+```
+
+#### Análisis del modelo
+
+Usando la información del árbol anterior es posible predecir el valor de
+$Y$. Por ejemplo:
+
+1.  Si una nueva observación tiene $x_{10} = 2000$ y $x_2 = 150$,
+    entonces la predicción $\hat{y}=30$.
+
+2.  Si otra observación tiene $x_{10} = 3000$ y $x_2 = 150$, entonces la
+    predicción $\hat{y}=16$.
+
+Como en el árbol anterior solo aparecen las variables $x_2$ y $x_9$ se
+recomienda volver a construir el árbol sólo con ellas.
+[@hernández2020a].
+
+### Reconstruir el modelo
+
+Se hace un modelo2 solo con las variable más importantes.
+
+```{r}
+modelo2 <- rpart(formula = y ~ x2 + x10, data=datos )
+modelo2
+
+summary(modelo2)
+
+prp(modelo2, nn = TRUE, fallen.leaves = TRUE, 
+    split.box.col = "lightblue",  
+    split.border.col = "darkgray", 
+    split.round = 5, round = 5)
+
+```
+
+Nueavamente es posible predecir el valor de $Y$. Por ejemplo:
+
+1.  Si una nueva observación 1 tiene $x_{10} = 2000$ y $x_2 = 150$,
+    entonces la predicción $\hat{y}=30$.
+
+2.  Si otra observación 2 tiene $x_{10} = 3000$ y $x_2 = 150$, entonces
+    la predicción $\hat{y}=16$.
+
+### Predicción con el modelo2
+
+¿Qué sucede se tienen datos nuevo?, ¿se puede predecir con el modelo
+construido?
+
+Para con valores de variables $x_{10}$ y $x_2$ siendo estas las más
+importantes.
+
+Se inicializan las variables $x_{10}$ y $x_2$
+
+```{r}
+x10 <- c(2000, 3000)
+x2 <- c(150, 150)
+
+nuevos_datos <- data.frame(x2, x10)
+kable(nuevos_datos, caption = "Nuevos datos")
+
+```
+
+Las predicciones
+
+```{r}
+
+predict(object=modelo2, newdata=nuevos_datos)
+```
+
+### Evaluando el modelo
+
+Se hace una correlación entre las predicciones de todos los datos contra
+las predicciones de los nuevos datos
+
+La variable *prediccion* sería precisamente la predicción de todos los
+datos $\hat{y}$ y $Y$ sería los valores originales de los datos
+
+Se hace una correlación, entendiendo el significado el grado de relación
+lineal entre dos variables el coeficiente de correlación como una medida
+descriptiva de la intensidad de la relación lineal entre dos variables.
+[@anderson2008].
+
+```{r}
+prediccion <- predict(object=modelo2, newdata=datos)
+
+kable(data.frame(Y= datos$y, prediccion), caption = "Relacionando variables Y y prediccion")
+correla <- cor(prediccion, datos$y)
+correla
+```
+
+### Interpretación
+
+Al haber construido y visualiza el primer modelo, se observan que $x_2$
+y $x_{10}$ son las variables más importantes en el modelo.
+
+Se construye un segundo modelo con lo cual se hacen predicciones sobre
+datos nuevos
+
+La evaluación se hace con una correlación entre las predicciones de
+todos los datos contra los valores reales y se encuentra una correlación
+de `r correla` que significa relación positiva fuerte y de acuerdo
+[@hernándezsampieri2014], si es mayor $0.75$ entonces se considera una
+correlación positiva considerable.
+
+## Personas Estudiantes
+
+![Imagen 2. Personas: Fuente
+google.com](images/personas%20dinero%20felicidad%20social%20promedio%20acadEmico.jpg "Personas")
+
+Se busca conocer cuales variables independientes son las más
+importantes, así como la predicción y evaluación del modelo de acuerdo a
+la correlación entre la prediccion de los datos y los datos reales de
+$Y$.
+
+### Los datos
+
+```{r}
+set.seed(2021)
+n <- 362
+
+dinero <- c(round(rnorm(n = 164, mean = 25, sd = 1), 2), round(rnorm(n = 100, mean = 28, sd = 1), 2), round(rnorm(n = 100, mean = 34, sd = 1), 2) )
+#dinero
+
+promedio <- promedio <- c(round(rnorm(n=91, mean = 90, sd = 4),0), round(rnorm(n=91, mean = 85, sd = 4),0), round(rnorm(n=91, mean = 80, sd = 4),0), round(rnorm(n=91, mean = 75, sd = 4),0))
+# promedio
+
+emocional <- c(round(rnorm(n=91, mean = 80, sd = 10),0), round(rnorm(n=91, mean = 70, sd = 10),0), round(rnorm(n=91, mean = 60, sd = 10),0), round(rnorm(n=91, mean = 50, sd = 10),0))
+
+social <- c(round(rnorm(n=100, mean = 70, sd = 15),0),round(rnorm(n=100, mean = 60, sd = 15),0), round(rnorm(n=164, mean = 50, sd = 15),0) )
+
+bienestar <- c(round(rnorm(n=100, mean = 80, sd = 10),0), round(rnorm(n=100, mean = 60, sd = 10),0), round(rnorm(n=164, mean = 40, sd = 10),0))
+
+datos <- data.frame(dinero, emocional, social, bienestar, promedio)
+
+kable(datos, caption = "Datos de estudaintes")
+
+```
+
+### Describir y preparar los datos
+
+```{r}
+summary(datos)
+str(datos)
+```
+
+Los datos fueron simulados a partir de valores numéricos, la variable dependiente es promedio el resto son variables independientes.
+
+Los datos no contienen valores Nulos o NA ya que tiene la certeza de que en todas las obseracioens hay valores numéricos.
+### Construir el modelo
+
+```{r}
+modelo <- rpart(formula = promedio ~ ., data=datos )
+modelo
+
+summary(modelo)
+
+```
+
+#### Dibujar el modelo
+
+```{r}
+prp(modelo, nn = TRUE, fallen.leaves = TRUE, 
+    split.box.col = "lightblue",  
+    split.border.col = "darkgray", 
+    split.round = 5, round = 5)
+
+```
+
+#### Análisis de modelo
+
+Se observa que las variables dinero, bienestar y emocional como
+variables independientes son las más importantes para definir el
+promedio académico de un estudiante.
+
+### Reconstruir el modelo
+
+Reconstruir el modelo solo con esas variables de dinero, bienestar y
+emocional ; se vuelve a dibujar el árbol de regresión.
+
+```{r}
+modelo2 <- rpart(formula = promedio ~ dinero + bienestar + emocional, data=datos )
+modelo2
+
+summary(modelo2)
+
+prp(modelo2, nn = TRUE, fallen.leaves = TRUE, 
+    split.box.col = "lightblue",  
+    split.border.col = "darkgray", 
+    split.round = 5, round = 5)
+```
+
+#### Predicción con el modelo2
+
+¿Qué sucede se tienen datos nuevo?, ¿se puede predecir con el modelo
+construido?
+
+1.  Observación 1: Una persona tiene un valor de dinero $20$, bienestar
+    $80$ emocional $70$ la predicción es de $90$ aproximadamente.
+
+2.  Observación 2: Una persona tiene un valor de dinero $18$, bienestar
+    $90$ emocional $65$ y la predicción es de $84$ aproximadamente.
+
+3.  Observación 3: Una persona tiene un valor de dinero $30$, bienestar
+    $70$ emocional $60$ y la predicción es de $79$ aproximadamente.
+
+Para con valores de variables siendo estas las más importantes.
+
+Se inicializan las variables dinero, bienestar y emocional
+
+```{r}
+dinero <- c(20, 18,30)
+bienestar <- c(80,90,70)
+emocional <- c(70, 65,60)
+
+nuevos_datos <- data.frame(dinero, bienestar, emocional)
+kable(nuevos_datos, caption = "Nuevos datos")
+
+```
+
+Las predicciones
+
+```{r}
+
+predict(object=modelo2, newdata=nuevos_datos)
+```
+
+#### Evaluando el modelo
+
+Se hace una correlación entre las predicciones de todos los datos contra
+las predicciones de los nuevos datos
+
+La variable *prediccion* sería precisamente la predicción de todos los
+datos $\hat{y}$ y $Y$ sería los valores originales de los datos
+
+Se hace una correlación, entendiendo el significado el grado de relación
+lineal entre dos variables el coeficiente de correlación como una medida
+descriptiva de la intensidad de la relación lineal entre dos variables.
+[@anderson2008].
+
+```{r}
+prediccion <- predict(object=modelo2, newdata=datos)
+
+kable(data.frame(Y= datos$promedio, prediccion), caption = "Relacionando variables Y y prediccion")
+correla <- cor(prediccion, datos$promedio)
+correla
+
+```
+
+### Interpretación
+
+Al haber construido y visualiza el primer modelo, se observan que
+dinero, bienestar y emocional son las variables más importantes en el
+modelo.
+
+La evaluación se hace con una correlación entre las predicciones de
+todos los datos contra los valores reales y se encuentra una correlación
+de `r correla` que significa relación positiva de moderada fuerte y de
+acuerdo [@hernándezsampieri2014], si es mayor $0.75$ entonces se
+considera una correlación positiva considerable.
+
+# Referencias Bibliográficas
