@@ -1,0 +1,16 @@
+
+Este módulo de diplomado describe las principales algoritmos de propone el paradigna de Machine Learning (ML).
+
+Se utiliza la programación R para ejecutar algoritmos de Machine Learning y con ello resolver tareas de regresión clasificación y clustering
+
+Se desarrollan programas y documentos markdown en relación a los algortimos de ML
+
+En esta carpeta se encontarrán subcarpetas de: 
+
+markdown
+script
+presentaciones
+datos
+imagenes
+
+entre otros...
