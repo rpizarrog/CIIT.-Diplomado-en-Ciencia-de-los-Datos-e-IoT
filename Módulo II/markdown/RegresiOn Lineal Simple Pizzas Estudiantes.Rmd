@@ -1,0 +1,537 @@
+---
+title: "Regresión Lineal Simple. Pizzas Estudiantes"
+author: "Rubén Pizarro Gurrola"
+date: "12/11/2021"
+output: 
+  html_document: 
+    toc: yes
+    toc_depth: 5
+    code_folding: hide
+    toc_float: yes
+    number_sections: yes
+bibliography: references.bib
+---
+
+# Objetivo
+
+Aplicar e interpretar algoritmo de regresión lineal simple para resolver tareas de predicción.
+
+# Descripción 
+
+Interpretar el coeficiente de correlación para utilizarse en regresión lineal simple.
+
+Los datos que se analizan pertenecen a un restaurante de Pizzas y estudiantes.
+
+Desarrollar el modelo de regresión lineal paso a paso identificar los coeficientes de ecuación por el método de mínimos cuadrados.
+
+Con los coeficientes encontrados se van a realizar predicciones con nuevos valores de la variable dependiente $x$
+
+# Fundamento Teórico
+
+
+## Correlación lineal
+
+La utilidad principal de los análisis correlacionales es saber cómo se puede comportar un concepto o una variable al conocer el comportamiento de otras variables vinculadas, por ejemplo: a mayor estudio mejor
+rendimiento; a mayor cantidad de sol mayor temperatura de ambiente; a mayor frecuencia de actividad social mayor porcentaje de contagios, entre muchos otros. [@hernándezsampieri2014].
+
+La importancia de la correlación es conocer el grado de relación entre variables y ayuda a las técnicas de predicción, es decir, intentar predecir el valor aproximado que tendrá un grupo de individuos o casos
+en una variable, a partir del valor que poseen en las variables relacionadas [@hernándezsampieri2014].
+
+La correlacion puede ser positiva o negativa de entre $−1$ a $1$ y significa que el coeficiente r de Pearson puede variar de $−1.00$ a $+1.00$, donde:
+
+-   $−1.00$ = correlación negativa perfecta. ("A mayor X, menor Y", de manera proporcional. Es decir, cada vez que X aumenta una unidad, Y disminuye siempre una cantidad constante). Esto también se aplica "a menor X, mayor Y".
+
+-   $−0.90$ = Correlación negativa muy fuerte.
+
+-   $−0.75$ = Correlación negativa considerable.
+
+-   $−0.50$ = Correlación negativa media.
+
+-   $−0.25$ = Correlación negativa débil.
+
+-   $−0.10$ = Correlación neg ativa muy débil.
+
+-   $0.00$ = No existe correlación alguna entre las variables.
+
+-   $+0.10$ = Correlación positiva muy débil.
+
+-   $+0.25$ = Correlación positiva débil.
+
+-   $+0.50$ = Correlación positiva media.
+
+-   $+0.75$ = Correlación positiva considerable.
+
+-   $+0.90$ = Correlación positiva muy fuerte.
+
+-   $+1.00$ = Correlación positiva perfecta ("A mayor X, mayor Y" o "a menor X, menor Y", de manera proporcional. Cada vez que X aumenta, Y aumenta siempre una cantidad constante).
+
+El signo indica la dirección de la correlación (positiva o negativa); y el valor numérico, la magnitud de la correlación [@hernándezsampieri2014].
+
+Por otra parte [@walpole2012], menciona que el análisis de correlación intenta medir la intensidad de tales relaciones entre dos variables por medio de un solo número denominado coeficiente de correlación.
+
+Para determinar el coeficiente de correlación de Pearson de una muestra se utiliza la siguiente fórmula:
+
+### Fórmula para correlación de Pearson
+
+$$
+r = \frac{\sum_{i=1}^{n}(x_i - \bar{x})\cdot(y_i - \bar{y})}{\sqrt{\sum_{i=1}^{n}(x_i - \bar{x})^{2}\cdot\sum_{i=1}^{n}(y_i - \bar{y})^{2}}}
+$$
+
+El método de *Pearson*, no es el único método para identificar un correlación lineal, el coeficiente de Pearson se utiliza cuando se deduce que los datos tiene un comportamiento de normalidad (se comportan
+bajo una distribución normal), principalmente. Se presentan algunas de ellas que son alternativas dependiendo del comportamiento de los datos
+en cuanto a normalidad, cantidad, outliers (datos atípicos), homogéeneidad, entre otros.
+
+### Fórmula para coeficiente de Spearman (Spearman's rho)
+
+Existen otras alternativa tales como correlación coeficiente de *Spearman que* se emplea como alternativa cuando los valores son ordinales, o bien, cuando los valores son continuos pero no satisfacen la condición de normalidad;
+
+$$
+r_{s}=1-\frac{6\sum d_{i}^{2}}{n (n^{2}-1)},
+$$
+
+Siendo $d_i$ la distancia entre los rangos de cada observación $(xi−yi)$ y $n$ el número de observaciones.
+
+### Fórmula para coeficiente Tau de Kendall
+
+Trabaja con rangos, por lo que requiere que las variables cuya relación se quiere estudiar sean ordinales o que se puedan transformar en rangos. Es otra alternativa al *Coeficiente de correlación de Pearson* cuando no
+se cumple la condición de normalidad. Parece ser más aconsejable que el coeficiente de *Spearman* cuando el número de observaciones es pequeño o los valores se acumulan en una región por lo que el número de ligaduras
+al generar los rangos es alto [@amatrodrigo2016].
+
+$$
+\tau= \frac{C-D}{\frac{1}{2}n(n-1)},
+$$
+
+Siendo la $C$ el número de pares concordantes, aquellos en los que el rango de la segunda variable es mayor que el rango de la primera variable. $D$ el número de pares discordantes, cuando el rango de la segunda es igual o menor que el rango de la primera variable.
+
+Tau $\tau$ como coeficiente, representa una probabilidad; es decir, es la diferencia entre la probabilidad de que las dos variables estén en el mismo orden (ordinalidad) en los datos observados versus la probabilidad de que las dos variables estén en diferentes órdenes [@amatrodrigo2016].
+
+### Fórmula de correlación de Jackknife
+
+El coeficiente de correlación de *Pearson* resulta efectivo en ámbitos muy diversos. Sin embargo, tiene la desventaja de no ser robusto frente a *outliers* a pesar de que se cumpla la condición de normalidad [@amatrodrigo016].
+
+Si dos variables están altamente correlacionadas excepto para una observación en la que los valores son muy dispares atípicos, entonces la correlación existente quedará expuesta. Una forma de evitarlo es recurrir al coeficiente de *Jackknife correlation* que consiste en calcular todos los posibles coeficientes de correlación entre dos variables si se excluye cada vez una de las observaciones. El promedio de todas las *Jackknife correlations* calculadas atenuará en cierta
+medida el efecto del *outlier* [@amatrodrigo2016].
+
+$$
+\bar{\theta}_{(A,B)} = \text{Promedio Jackknife correlation (A,B)} = \frac{1}{n}\cdot \sum_{i=1}^n \cdot\hat r_i
+$$
+
+Donde $n$ es el número de observaciones y $\hat r_i$ es el coeficiente de correlación de *Pearson* estimado entre las variables $A$ y $B$, habiendo excluido la observación $_i$.
+
+Para estos ejercicios se antepone el hecho de que los datos tienen **normalidad sin atípicos** por lo que se utilizará e interpretará sólamente el coeficiente de correlación de *Pearson*.
+
+## Regresión lineal simple
+
+**¿Qué es una regresión lineal simple?**
+
+La regresión lineal simple implica aplicar una ecuación matemática de mínimos cuadrados que permite pronosticar el valor de una variable con base en el valor de otra; este procedimiento se llama análisis de regresión. 
+
+El análisis de regresión es un método para examinar una relación lineal entre dos variables; se utiliza el concepto de correlación $r$, sin embargo, la regresión proporciona mucho más información, además de permitir estimaciones o predicciones de la relación lineal con la ecuación de mínimos cuadrados [@lind_estadistica_2015].
+
+### Fórmula de mínimo cuadrados para regresión lineal
+
+$$Y = a + bx$$
+
+En donde: 
+
+* $Y$ es el valor a predecir
+* $a$ Es el valor del cruce del eje y
+* $b$ Es el valor de la pendiente o inclinación.
+* $x$ el valor de la variable independiente
+
+**¿Cómo obtener a y b?**
+
+$$
+b = r \cdot(\frac{\sigma_y}{\sigma_x}) = \frac{\sum(x_i - \bar{x})\cdot(y_i - \bar{y})}{\sum(x_i-\bar{x})^2}
+$$
+
+* En donde r es el coeficiente de correlación.
+* $\sigma_y$ es la desviaci´pn estándrd de la variable 'y'.
+* $\sigma_x$ es la desviación estándard de la variable 'x'.
+
+$$a = \bar{y} - b \cdot\bar{x}$$
+
+* Se requiere la media de y $\bar{y}$
+* Se necesita la media de x $\bar{x}$
+[@lind_estadistica_2015].
+
+Un valor que es importante destacar en la regresión lineal, es el coeficiente de determinación también representado por $r^{2}$ que se puede sacar elevando al cuadrado el coeficiente de correlación previamente determinado.
+
+Cuando el coeficiente $r$ de Pearson se eleva al cuadrado $r^{2}$, se obtiene el coeficiente de determinación y el resultado indica la variabilidad de factores comunes. Esto es, el porcentaje de la variación de una variable debido a la variación de la otra variable y viceversa (o cuánto explica o determina una variable la variación de la otra) [@hernandez_sampieri_metodologiinvestigacion_2014].
+
+El coeficiente de determinación es la proporción y la explicación de la variación total de la variable dependiente $y$ con respecto a la variabe independiente $x$. [@lind_estadistica_2015].
+
+Para construir un modelo de regresión lineal se requiere disponer de datos. Se necesita una variable independiente llamada $x$ y una variable dependiente llamada $y$ 
+
+
+El análisis de regresión es un método para examinar una relación lineal entre dos variables; se utiliza el concepto de correlación r, sin embargo, la regresión proporciona mucho más información, además de permitir estimaciones o predicciones de la relación lineal con la ecuación de mínimos cuadrados [@lind2015].
+
+
+
+# Desarrollo
+
+## Cargar librerías
+
+Se cargan algunas librerías en caso de no tenerlas, deben instalarse con anticipación con *install.packages()*.
+
+```{r message=FALSE, warning=FALSE}
+library(ggplot2) # Operaciones con datos
+library(dplyr) # Gráficos
+library(knitr) # Tablas amigables
+library (corrplot) # Para gráficos de correlaciones
+library(PerformanceAnalytics) # Para gráficos de correlaciones
+library(mosaic) # Para distribución normal
+```
+
+## Caso 1: Restaurante de Pizzas y estudiantes
+
+Caso de pizzas cercanas a instituciones educativas. A mayor cantidad de alumnos cerca de un restaurante de pizzas posiblemente las ventas aumentan.
+
+El ejemplo identifica a $x$ como la cantidad de estudiante de una escuela que están cerca de un restaurante pizzas y $y$ el valor de las ventas registradas.
+
+La variable *datos* significan las ventas registradas por la cantidad de número de estudiantes cerca del restaurante. Los datos que se presentan son valores en miles de estudiantes y ventas en miles. Fuente del ejercicio de [@anderson2008].
+
+Son 10 observaciones.
+
+```{r}
+n <- 10
+i <- 1:n
+x <- c(2,6,8,8,12,16,20,20,22,26)
+y <- c(58,105,88,118,117,137,157,169,149,202)
+       
+datos <- data.frame(i, x, y)
+datos
+```
+
+Se visualiza la relación de los datos mediante un diagrama de
+dispersión, la pregunta es ¿se observa una relación lineal entre las variables $x$ y $y$, es decir entre la cantidad de estudiantes que están cerca del restaurante y las ventas?, es posible aplicar un modelo de regresión lineal simple. Las respuestas a estas preguntas es que SI.
+
+La **variable independiente** es $x$ la cantidad de estudiantes y
+
+La **variable dependiente** es $y$ las ventas de pizzas.
+
+```{r}
+ggplot(data = datos, aes(x=x, y=y))   +
+  geom_point(colour='blue') +
+  xlab("Estudiantes") + 
+  ylab("Ventas") + 
+  ggtitle("Dispersión sobre datos")
+
+```
+
+### La correlación 
+Si se tuviera que determinar manualmente el coeficiente de correlación de Pearson $r$ con los datos sería:
+
+Con *cbind()* se agregan columnas a un *data.frame(),* con *rbind*() se agregan reglones a un *data.frame()* y con *apply*() se calculan los totales por cada columna de acuerdo los parámetros que se le indique.
+
+```{r}
+
+tabla <- datos
+tabla <- cbind(datos, datos$x-mean(datos$x),  datos$y-mean(datos$y), (datos$x-mean(datos$x)) * (datos$y-mean(datos$y)))
+
+tabla <- cbind(tabla, (datos$x - mean(datos$x))^2, (datos$y - mean(datos$y))^2)
+#tabla
+names(tabla) <- c('i', 'x', 'y','(x-mx)', '(y-my)',  '(xi-mx)*(y-my)', '(xi-mx)^2', '(yi-my)^2')
+
+sumas <- apply(X = tabla, 2, FUN = sum)
+
+tabla <- rbind(tabla, sumas)
+
+tabla[nrow(tabla), 1] <- '*'
+kable(tabla, caption = paste("Coeficiente de Correlación", "media de x:",mean(datos$x), "media de y", mean(datos$y)))
+
+```
+
+$$
+r = \frac{\sum_{i=1}^{n}(x_i - \bar{x})\cdot(y_i - \bar{y})}{\sqrt{\sum_{i=1}^{n}(x_i - \bar{x})^{2}\cdot\sum_{i=1}^{n}(y_i - \bar{y})^{2}}} = \frac{2840}{\sqrt{568 \times 15730}} = \frac{2840}{2989.087}=0.950123
+$$
+
+```{r}
+numerador <- sum((datos$x - mean(datos$x)) * (datos$y - mean(datos$y)))
+                 
+numerador
+
+denominador <- sqrt(sum((datos$x - mean(datos$x))^2) *  sum((datos$y - mean(datos$y))^2))
+denominador
+
+correla <- numerador / denominador 
+correla
+
+```
+
+En lenguaje de programación R, existe la función *cor()* que devuelve el valor de la correlación entre dos variables cuantitativas y debe salir el mismo valor.
+
+```{r}
+correla <- cor(datos$x, datos$y)
+correla
+
+# o 
+
+pairs(x = datos[,2:3])
+
+```
+
+Puede verse mas amigable con la función *chart.Correlation* de la librería *PerformanceAnalytics* que previamente se cargó.
+
+```{r}
+chart.Correlation(R = datos[,2:3], histogram = F, pch = 19)
+
+```
+
+La imagen anterior visualiza el tipo de relación lineal, el valor del coeficiente de correlación de Pearson y con los asteriscos '\*\*\*' indica si la variable independiente es estadísticamente significativa con respecto a la variable dependiente.
+
+Se entiende que es una correlación lineal positiva muy fuerte
+
+Siendo $r$ el valor del coeficiente de correlación. La correlación de Pearson funciona bien con variables cuantitativas que tienen una distribución **normal**.
+
+La idea básica del análisis de correlación es identificar la asociación entre dos variables; por lo general, se puede describir la relación graficando o elaborando un diagrama de dispersión entre $x$ y $y$.
+
+### La regresión lineal simple
+
+¿cómo determinar los coeficientes $a$ y $b$?
+
+$$
+b=\hat{\beta}_1 = \frac{\sum^n_{i=1}(x_i - \overline{x})(y_i - \overline{y})}{\sum^n_{i=1}(x_i - \overline{x})^2} =\frac{Sy}{Sx}\times{r}
+$$
+
+Se requieren las medias de las variables $x$ y $y$, es decir $\bar{x}$ y
+$\bar{y}$, y desarrollar la fórmula.
+
+Entonces $b$ se obtiene con la sumatoria de la diferencia de cada valor
+de $x$ menos su media $\bar{x}$ multiplicada por la diferencia de cada
+valor de $y$ menos su media $\bar{y}$ todo el resultado dividido entre
+la sumatoria del cuadrado de la diferencia de cada valor de $x$ menos su
+media $\bar{x}$, y con ello se obtiene $b$ o $\hat{b1}$
+
+De manera alternativa el coeficiente o la pendiente $b$ se puede
+determinar multiplicando el valor del coeficiente de correlación
+determinado previamente multiplicado por la división de la desviación
+estándar $Sy$ de la variable dependiente $y$ entre la desviación
+estándar $Sx$ de la variable independiente $x$, es decir:
+$r \times \frac{Sy}{Sx}$
+
+y
+
+$$
+a = \hat{\beta}_0 = \overline{y} - \hat{\beta}_1\overline{x}
+$$
+
+Determinando los coeficientes de $a$ y $b$ aplicando la fórmula: $$
+b=\hat{\beta}_1 = \frac{\sum^n_{i=1}(x_i - \overline{x})(y_i - \overline{y})}{\sum^n_{i=1}(x_i - \overline{x})^2}
+$$
+
+```{r}
+b <-  sum((datos$x - mean(datos$x)) * (datos$y - mean(datos$y))) / sum((datos$x - mean(datos$x))^2)
+b 
+
+a = mean(datos$y) - b * mean(x)
+a
+```
+
+Determinando los coeficientes de $a$ y $b$ aplicando las fórmula
+determinando b usando el coeficiente de correlación
+
+```{r}
+b = correla * sd(datos$y) / sd(datos$x)
+b
+
+a = mean(datos$y) - b * mean(x)
+a
+
+```
+
+En ambos casos se debe generar los mismos valores para los coeficientes
+$a$ y $b$ o $b$ y $a$ respectivamente.
+
+Toda vez que se tienen los coeficientes $a$ y $b$ ya se puede determinar
+la recta de regresión para cada valor de $x$.
+
+Por ejemplo: para un valor de $x_{i} = 1$ el valor de $Y=a+bx_1 =$
+`r a + b * (1)`; para un valor de un valor de $x_{i} = 2$ el valor de
+$Y=a+bx_2 =$ `r a + b * (2)` y para un valor de un valor de $x_{i} = 50$
+el valor de $Y=a+bx_{50} =$ `r a + b * (50)` y así sucesivamente.
+
+Aquí los valores predecidos de $Y$ por cada valor de la variable
+independiente $x$.
+
+A estos valores se les llama también valores de la recta o valores
+ajustados.
+
+Se presentan los valores de predicción para cada valor de $x$
+
+```{r}
+datos$x
+Y = a + b*(datos$x)
+Y
+```
+
+### Diagrama de dispersión y recta de regresión
+
+Con estos valores ya se puede dibujar la recta en el diagrama de dispersión.
+
+```{r}
+
+ggplot(data = datos, aes(x=x, y=y))   +
+  geom_point(colour='blue') +
+  geom_line(aes(x = x, y = Y), color = "red") +
+  xlab("Estudiantes") + 
+  ylab("Ventas") + 
+  ggtitle("Linea de tendencia sobre datos")
+```
+
+**¿y cómo entra el machine learning?**
+
+hasta ahorita y de manera general hay que usar un modelo
+
+## lm()
+
+Determinando el modelo de regresión lineal simple con la función *lm().*
+
+### Construir el modelo
+
+Un modelo de regresión lineal es la aplicación de la fórmula a partir de la historia de los datos, en don de participan las variables independientes $x$ y la variable dependiente $y$. La función *lm()* del paquete base de R, ya genera los estadísticos necesarios para interpretar una regresión lineal simple.
+
+Hay por lo menos dos argumentos necesarios que se incorporan en la función *lm()*: el origen de los datos o sea *data = datos* y la fórmula *formula = y\~x,* que indica que la variable $y$ es regresiva en función de la variable $x$ o $y$ depende de $x$.
+
+El resultado de la función *lm()* se almacena en una variable llamada modelo (puede tener cualquier nombre válido de R).
+
+En la variable modelo, se encuentran los estadísticos necesarios para su interpretación. Se utiliza la función *summary()* alojado en la variable *sm* para mostrarlos.
+
+```{r}
+modelo <- lm(data = datos, formula = y~x)
+sm <- summary(modelo) 
+sm
+```
+
+hay que interpretar varias cosas:
+
+#### Coeficientes $a$ y $b$
+
+Los valores de los coeficientes $a$ y $b$ a partir de la construcción del modelo. El valor de $a=60$ que es la intersección del inicio de la linea recta o de tendencia en el eje Y, y $b$ el valor de la pendiente que para este caso es $a=5$ que significa que por cada valor de $x$ el valor de predicción $Y$ aumenta en cinco unidades.
+
+```{r}
+modelo$coefficients
+a <- modelo$coefficients[1]
+b <- modelo$coefficients[2]
+
+```
+
+#### Valores ajustados
+
+Y también se pueden obtener los valores ajustados de la linea por cada valor de $x$ de los datos que coinciden con los calores de $Y$ que se calcularon de acuerdo a la fórmula$Y = a + bx_i$.
+
+```{r}
+modelo$fitted.values
+
+```
+
+#### Diagrama de dispersión y recta de regresión
+
+El diagrama de dispersión también puede verse usando
+*modelo\$fitted.values* en el *ggplot()*.
+
+```{r}
+ggplot(data = datos, aes(x=x, y=y))   +
+  geom_point(colour='blue') +
+  geom_line(aes(x = x, y = modelo$fitted.values), color = "red") +
+  xlab("Estudiantes") + 
+  ylab("Ventas") + 
+  ggtitle("Linea de tendencia sobre datos")
+```
+
+#### Residuales
+
+Los residuales con respecto a $x$ que se generaron con la tabla construida arriba en donde se obtuvieron valores de $x - \bar{x_i}$ se obtienen usando la expresión *modelo\$residuals*
+
+```{r}
+modelo$residuals
+```
+
+**Coeficiente de determinación R^2^:**
+
+El coeficiente de determinación $R^2$, describe la proporción de variabilidad observada en la variable dependiente *Y* explicada por el modelo y relativa a la variabilidad total. Su valor está acotado entre 0 y 1. [@amatrodrigo2016]. Es decir, el valor numérico de $R^2$ es que tanto impacta o representa la variable $x$ al valor de predicción $Y$,
+por supuesto entre más alto mejor la representatividad y variabilidad total de $Y$.
+
+$$
+\frac{\sum(\hat{y_i}-y_i)^2}{\sum(y_i-\overline{y})^2}
+$$
+
+Se construye una tabla2 para reflejar estas sumatorias siendo $Y$ el valor de $\hat{y}$ o el valor de la predicciones.
+
+
+```{r}
+tabla2 <- datos[,c(2,3)]
+tabla2 <- cbind(tabla2, Y)
+tabla2 <- cbind(tabla2, Y - datos$y)
+tabla2 <- cbind(tabla2, (Y - datos$y)^2)
+
+tabla2 <- cbind(tabla2, datos$y - mean(datos$y))
+tabla2 <- cbind(tabla2, (datos$y-mean(datos$y))^2)
+
+
+names(tabla2) <- c('x', 'y', 'Y', '(Y-y)', '(Y-y)^2', '(y-media(y))', '(y-media(y))^2')
+sumas <- apply(tabla2, 2, sum)
+tabla2 <- rbind(tabla2, sumas)
+
+kable (tabla2, caption = "Sumatorias para determinar coeficiente de determinación R-Square")
+```
+
+Se determinan paso a paso el numerador y el denominador conforme a la fórmula.
+
+```{r}
+numerador <- sum((Y - datos$y)^2)
+denominador <- sum((datos$y - mean(datos$y))^2)
+
+numerador
+denominador
+
+r.cuad <- numerador / denominador
+r.cuad
+```
+
+El coeficiente de determinación $r^2$ o *R-squared* se puede extraer con el modelo mediante *sm\$r.squared* que debe ser el mismo valor que se genera conforme a la fórmula
+
+```{r}
+sm$r.squared
+
+```
+
+El valor de coeficiente de determinación o *R-squared* $R^2$ es igual al cuadrado del coeficiente de correlación de *Pearson* $r$ entre $x$ e $y$ , entonces hay que asociar es el valor de la correlación lineal $r=$ `r correla`.
+
+```{r}
+correla^2
+
+```
+
+El valor de la correlación de *Pearson* entonces es la raiz cuadrada que del coeficiente de determinación o $r^2$ *R-squared*, también debe ser el mismo valor que el coeficiente de correlación de *Pearson* calculado
+arriba.
+
+```{r}
+sqrt(sm$r.squared)
+```
+
+Finalmente para que sirve obtener la ecuación de regresión lineal simple, la respuesta es que se pueden predecir o pronosticar valores de $Y$ a partir de la ecuación o se puede hacer mediante la función
+*predict()* directamente*.*
+
+Por ejemplo, cual sería la predicción para un numero de estudiantes de 28 mil, 36 mil, 57 mil
+
+$$
+Y = a + bx_i
+$$
+
+$$
+Y = a + b\cdot 28; Y = a + b\cdot 36; Y = a + b\cdot 57;
+$$
+
+```{r}
+estudiantes <- c(28, 36, 57)
+
+predict(object = modelo, newdata = data.frame(x=estudiantes))
+```
+
+# Interpretación
+
+Se utiliz la función ml() para apicr un modelo de regresión lineal simple.
+
+
+# Bibliografía
