@@ -1,0 +1,133 @@
+---
+title: "Regresión Lineal Simple. Women Pesos y Estaturas"
+author: "Rubén Pizarro Gurrola"
+date: "12/11/2021"
+output: html_document
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+# Objetivo
+
+Aplicar e interpretar algoritmo de regresión lineal simple para resolver
+tareas de predicción.
+
+# Descripción
+
+Interpretar el coeficiente de correlación para utilizarse en regresión
+lineal simple.
+
+Los datos que se analizan pertenecen Women con variables de Pesos y
+Estaturas.
+
+Desarrollar el modelo de regresión lineal paso a paso identificar los
+coeficientes de ecuación por el método de mínimos cuadrados.
+
+Con los coeficientes encontrados se van a realizar predicciones con
+nuevos valores de la variable dependiente $x$
+
+# Fundamento Teórico
+
+Se recomienda ver el caso <https://rpubs.com/rpizarro/834458>
+
+# Desarrollo
+
+## Cargar librerías
+
+Se cargan algunas librerías en caso de no tenerlas, deben instalarse con
+anticipación con *install.packages()*.
+
+```{r message=FALSE, warning=FALSE}
+library(ggplot2) # Operaciones con datos
+library(dplyr) # Gráficos
+library(knitr) # Tablas amigables
+library (corrplot) # Para gráficos de correlaciones
+library(PerformanceAnalytics) # Para gráficos de correlaciones
+library(mosaic) # Para distribución normal
+```
+
+## Caso 1: Women pesos y estaturas
+
+Caso de Women pesos y wstaturas. hay que aplicar un modelo de regresión
+lineal para predecir el peso en relación a la estatura de mujeres
+americanas.
+
+Es un conjunto de datos provistos por los paquetes base de R, se
+encuentra varios de ellos con la función \*data()\* y se utilizará el de
+nombre \*women()\*.
+
+Los datos son promedios pesos y estaturas de mujeres de Estados Unidos.
+
+El ejemplo identifica a $x$ como la cantidad de estudiante de una
+escuela que están cerca de un restaurante pizzas y $y$ el valor de las
+ventas registradas.
+
+# Desarrollo
+
+## Cargar datos
+
+```{r}
+# Como cargar los datos
+
+```
+
+## Describir los datos
+
+```{r}
+# summary(datos)
+
+```
+
+## Modelo de dispersión de los datos
+
+```{r}
+# graficar con ggplot() la dispersón puntos en color café 
+
+```
+
+## Correlación lineal 
+
+Cual es la correlación y su interpretación
+
+```{r}
+# Estimar la corelacción 
+#correla <- cor(peso, estatura)
+#correla
+```
+
+## Regresión lineal simple
+
+### Construir el modelo
+
+```{r}
+# modelo <- lm()
+# Asignar a una variable el summary del modelo
+# sm <- summary(modelo)
+```
+
+Construir el modelo con todos los datos
+
+### Evaluar el modelo
+
+Evaluar el valor de R Square y su significado
+
+Evaluar las significaciones de las variables ***
+
+Construir la dispersión con la recta de regresión
+
+## Predecir con nuevos datos
+
+Usar la función predict()
+
+```{r}
+# predict()
+```
+
+# Interpretación
+
+Se utiliza la función ml() para apicar un modelo de regresión lineal simple.
+
+Se hicieron predicciones
+
+# Bibliografía
