@@ -1,0 +1,90 @@
+---
+title: "Untitled"
+author: "Rubén Pizarro Gurrola"
+date: "13/11/2021"
+output: powerpoint_presentation
+---
+
+# Media y mediana
+
+## Cargar librerías
+```{r}
+library(readr)
+library(ggplot2)
+```
+
+
+## Media
+
+La media aritmética es la suma de los elementos dividos entre la cantidad e los mismos
+
+```{r}
+edades <- sample(x = 20:60, size = 50, replace = TRUE)
+
+
+```
+
+## las edades
+
+```{r}
+edades
+```
+
+## Convertir a dataframe edades
+```{r}
+datos <- data.frame(edades)
+head(datos)
+```
+
+
+## Gráfico de puntos con ggplot
+```{r}
+ggplot(data = datos) +
+    geom_point(aes(x = 1:nrow(datos), y = edades))
+```
+
+
+## Gráfico de puntos con ggplot colo rrojo
+```{r}
+ggplot(data = datos) +
+    geom_point(aes(x = 1:nrow(datos), y = edades), col='red', pch=8)
+```
+
+## Determnar la media
+
+```{r}
+media <- mean(edades)
+media
+```
+## La mediana
+
+```{r}
+mediana <- median(edades)
+mediana
+```
+
+## ¿Cuál es la media del peso en kgs de los jugadores de Futbol registrados en FIFA?
+
+## Cargar los datos
+```{r}
+poblacion <- read.csv("https://raw.githubusercontent.com/rpizarrog/Probabilidad-y-EstadIstica-VIRTUAL-DISTANCIA/main/datos/datos.FIFA.limpios.csv", encoding = "UTF-8", stringsAsFactors = TRUE)
+```
+
+## Media de peso en kgs de jugadores
+```{r}
+media.peso <- mean(poblacion$PesoKgs, na.rm = TRUE) # Si hay NA no los consideres
+media.peso
+```
+
+## Fórmula de la mediana
+$$
+\tilde{x} =\begin{Bmatrix}x_{(n+1)/2}\text{ Si n es impar,}
+\\ \frac{1}{2}\cdot(x_{n/2}+x_{n/2+1})\text{ Si n es par,} \end{Bmatrix}
+$$
+
+## La mediana de peso en Kgs de jugadores
+```{r}
+mediana.peso <- median(poblacion$PesoKgs, na.rm=TRUE) # Si hay NA no los consideres
+mediana.peso
+```
+

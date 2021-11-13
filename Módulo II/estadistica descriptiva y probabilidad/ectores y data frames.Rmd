@@ -1,0 +1,46 @@
+---
+title: "vectores y data frames"
+author: "Rubén Pizarro Gurrola"
+date: "13/11/2021"
+output: powerpoint_presentation
+---
+
+
+# Vectores y data.frames
+
+## Vectores
+
+Conjunto de elementos c()
+
+```{r}
+edades <- c(23, 25, 34, 43, 56, 65, 18, 19, 23, 25, 43)
+estaturas <- c(sample(160:170, 11, replace = TRUE))
+generos <- c(rep('M', 5), rep('F', 6))
+
+
+```
+
+
+## Mostrar los vectores 
+
+El vector edades es numérico entero, el vector edades es numérico real (double o float), el vector generos en character
+```{r}
+edades
+estaturas
+generos
+```
+
+## usando class()
+```{r}
+class(edades)
+class(estaturas)
+class(generos)
+```
+
+## Crear un data.frame
+```{r}
+datos <- data.frame(edades, estaturas, generos)
+datos
+```
+
+

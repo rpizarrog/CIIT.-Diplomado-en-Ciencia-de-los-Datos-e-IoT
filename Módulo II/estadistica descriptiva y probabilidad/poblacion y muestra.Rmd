@@ -1,0 +1,125 @@
+---
+title: "Untitled"
+author: "Rubén Pizarro Gurrola"
+date: "13/11/2021"
+output: powerpoint_presentation
+---
+
+
+# Pobación y muestra
+
+## Cargar librerías
+```{r}
+library(readr)
+library(ggplot2)
+library(dplyr)
+```
+
+## Población 
+
+Es un el conjunto de todos los individuos que conforma un estudio (Sánchez, Simón) 
+
+## Población de jugadores de FIFA
+```{r}
+poblacion <- read.csv("https://raw.githubusercontent.com/rpizarrog/Probabilidad-y-EstadIstica-VIRTUAL-DISTANCIA/main/datos/datos.FIFA.limpios.csv", encoding = "UTF-8", stringsAsFactors = TRUE)
+
+```
+
+## Reducir poblacion a solo variables de interés de estudio
+```{r}
+poblacion.interes <- poblacion[,c(2,3,4)]
+```
+
+
+## Estructura de la poblacion 
+```{r}
+str(poblacion.interes)
+```
+
+
+
+## Mostrar los primeros registros 
+[renglones, columnas]
+```{r}
+head(poblacion.interes)
+```
+
+
+## Descriptivos básicos de poblacion [1:4]
+```{r}
+# summary(poblacion)
+```
+
+ 
+## Muestra
+
+Es una parte de la población (Sánchez, Simón)
+
+Se requiere una variable de interés digamos nacionalidad
+
+```{r}
+set.seed(2021)
+muestra <- sample(x = poblacion$Nationality, size = 30, replace = FALSE)
+
+
+```
+
+## Ver los primeros registros de la 
+
+```{r}
+head(muestra, 3)
+```
+
+## summary de la muestra de nacionalidad
+```{r}
+sm <- summary(muestra)
+```
+
+
+## Los primeros seis
+```{r}
+head(sm, 3)
+```
+
+
+## Muestra de todas las varias variables de interés
+
+```{r}
+registros <- sample(x = 1:nrow(poblacion), size = 300)
+registros
+```
+
+
+## Ahora la muestra a partir de los registros
+```{r}
+muestra <- poblacion[registros, c(2,3,4)]
+
+```
+
+### muestra
+
+```{r}
+head(muestra)
+```
+
+## Frecuencia de nacionalidad de población
+```{r}
+poblacion %>% 
+  group_by(Nationality) %>%
+  count %>%
+  filter(n >= 500) %>%
+  ggplot(aes(x = Nationality, y = n)) + 
+  geom_bar(stat = "identity")
+```
+
+
+## Frecuencia de nacionalidad de la muetra
+```{r}
+muestra %>% 
+  group_by(Nationality) %>%
+  count %>%
+  filter(n >=20) %>%
+  ggplot(aes(x = Nationality, y = n)) + 
+  geom_bar(stat = "identity")
+```
+

@@ -1,0 +1,69 @@
+---
+title: "medidas de localización"
+author: "Rubén Pizarro Gurrola"
+date: "13/11/2021"
+output: powerpoint_presentation
+---
+
+# Medidas de localización
+
+## Cargar librerías
+## Cargar librerías
+```{r}
+library(readr)
+library(ggplot2)
+```
+
+## Crear los datos
+```{r}
+set.seed(2021)
+edades <- sample(x = 20:60, size = 50, replace = TRUE)
+
+
+```
+
+
+## edades
+```{r}
+edades
+```
+
+## ordnar los datos
+```{r}
+edades.ordenados <- sort(edades)
+edades.ordenados
+```
+
+## Cuartiles
+
+Son valores que estén en el conjunto de datos al primer cuarto, al segundo cuarto y al tercer cuarto de los datos
+```{r}
+cuartiles <- quantile(x = edades, probs = c(0.25, 0.50, 0.75))
+cuartiles
+
+```
+
+## ¿Para que sirven los caurtiles?
+
+Pera interpretar cúantos y cuáles datos están por debajo o por encima de algún cuartil?
+
+## Transformar edades a data.frame
+```{r}
+datos <- data.frame(edades)
+```
+
+## summary(datos)
+```{r}
+summary(datos)
+```
+
+
+## Dibujar cuartiles
+
+```{r message=FALSE, warning=FALSE}
+ggplot(datos) +
+  geom_boxplot(aes(x = 1:nrow(datos), y = edades)) +
+  ggtitle(label = "edades", subtitle = paste("La median es : ", median(edades))) 
+```
+
+

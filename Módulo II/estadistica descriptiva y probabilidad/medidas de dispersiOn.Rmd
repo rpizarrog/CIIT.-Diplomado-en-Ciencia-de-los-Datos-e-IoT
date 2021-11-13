@@ -1,0 +1,125 @@
+---
+title: "medidas de dispersión"
+author: "Rubén Pizarro Gurrola"
+date: "13/11/2021"
+output: powerpoint_presentation
+---
+
+# Medidas de dipersión 
+
+## 
+
+Son medidas que identifican el grado de variación de los datos con respecto a la media, que tanto se alejan o se acercan de la media (Pizarro)
+
+## Cargar librerías
+```{r}
+library(readr)
+library(ggplot2)
+```
+
+## Crear los datos
+```{r}
+set.seed(2021)
+edades <- sample(x = 20:60, size = 50, replace = TRUE)
+
+
+```
+
+
+## edades
+```{r}
+edades
+```
+
+## Fórmulas de varianza poblacional
+
+$$
+\sigma^2 = \frac{\sum_{i=1}^N(x_i- \mu)^2}{N}
+$$
+
+## Fórmula de varianza muestral
+
+$$
+S^2 = \frac{\sum_{i=1}^n(x_i- \bar{x})^2}{n-1}
+$$
+
+
+## Desarrolo de var muestral
+
+```{r}
+n <- length(edades)
+varianza = sum((edades - mean(edades))^2)/(n-1)
+
+varianza
+```
+## Desarrollando la tabla
+
+```{r}
+tabla <- data.frame(i=1:length(edades), x = edades, m = mean(edades), x.menos.m = edades - mean(edades), x.menos.m2 = (edades - mean(edades))^2)
+tabla
+```
+
+## Calculando varianza
+```{r}
+numerador = sum(tabla$x.menos.m2)
+denominador = n-1
+varianza = numerador / denominador
+varianza
+```
+
+
+## varianza con var en R
+```{r}
+varianza = var(edades)
+varianza
+```
+
+
+## Desviación 
+
+Poblacional 
+$$
+\sigma = \sqrt{\sigma^2}
+$$
+
+Muestra
+$$
+S = \sqrt{S^2}
+$$
+
+## Determinando desviaicón 
+```{r}
+desviacion = sqrt(varianza)
+desviacion
+```
+
+## Desviacion con sd
+```{r}
+sd(edades)
+```
+
+## y la media arimética?
+$$
+\sum \frac{(x_1, x_2, x_3...x_n)}{n}
+$$
+
+```{r}
+media = mean(edades)
+media
+
+```
+
+## Transforma a df las edades
+```{r}
+datos <- data.frame(edades)
+```
+
+## Visualmente dispersión de las edades con respecto a la media
+```{r}
+ggplot(datos) +
+    geom_point(aes(x = 1:nrow(datos), y = edades)) +
+    geom_hline(yintercept = media, col='red') +
+  ggtitle(label = "edades", subtitle = paste("La media es : ", media))
+
+```
+

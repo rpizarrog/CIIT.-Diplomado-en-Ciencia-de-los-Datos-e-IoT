@@ -1,0 +1,79 @@
+---
+title: "tipos de datos"
+author: "Rubén Pizarro Gurrola"
+date: "13/11/2021"
+output: powerpoint_presentation
+---
+
+# Tipos de datos
+
+## Tipos de datos numéricos
+
+Son datos cuantitativos
+
+```{r}
+x1 = 10
+x2 = 10.30
+x1
+x2
+```
+
+## Tipos de datos categóricos
+
+Son datos categóricos character string o texto o cualitativos
+```{r}
+nombre <- 'RUBEN'
+ciudad <- 'DURANGO'  
+
+nombre; ciudad
+```
+
+## Datos tipo factor en R
+
+Los factores son character o cualitativos o categóritos pero son etiquetados.
+```{r}
+estudios <- c('PRIMARIA', 'SECUNDARIA', 'PREPARATORIA', 'PROFESIONAL', 'POSGRADO')
+
+estudios
+```
+
+## Factorizar profesiones
+```{r}
+estudios <- as.factor(estudios)
+estudios
+
+
+
+```
+
+
+## Niveles de datos categóricos tipo factor
+```{r}
+levels(estudios)
+```
+
+
+## Ejemplo dato de ingresos numérico
+```{r}
+ingresos <- c(5,10,15)
+ingresos
+
+class(ingresos)
+```
+
+## Ejemplo de ingreso character
+```{r}
+ingreso <- c('1-5', '5-10', '5-15')
+ingreso
+
+class(ingreso)
+```
+
+## Ejemplo ingreso categorizado o factor
+```{r}
+ingreso <- as.factor(ingreso)
+ingreso
+class(ingreso)
+
+```
+

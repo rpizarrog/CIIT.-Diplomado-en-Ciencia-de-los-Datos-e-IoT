@@ -1,0 +1,69 @@
+---
+title: "Frucuencias y tablas de frecuencias"
+author: "Rubén Pizarro Gurrola"
+date: "13/11/2021"
+output: powerpoint_presentation
+---
+
+
+
+# Pobación y muestra
+
+## Cargar librerías
+```{r}
+library(readr)
+library(ggplot2)
+library(dplyr) # filtros
+library(fdth) # Frecuencias
+```
+
+## Muestra de jugadores registrados
+
+Datos es un el conjunto de todos los individuos que conforma un estudio (Sánchez, Simón) 
+
+## Jugadores de FIFA
+```{r}
+datos <- read.csv("https://raw.githubusercontent.com/rpizarrog/Probabilidad-y-EstadIstica-VIRTUAL-DISTANCIA/main/datos/datos.FIFA.limpios.csv", encoding = "UTF-8", stringsAsFactors = TRUE)
+
+```
+
+## Variables de interés
+
+Nationality
+Age
+Preferred.Foot
+
+## table() Edad
+```{r}
+table(datos$Age)
+```
+
+## table() Natonality
+```{r}
+# table(datos$Nationality)
+```
+
+## table() PreferredFoot
+```{r}
+table(datos$Preferred.Foot)
+```
+
+## Tabla de frecuencias de edades
+```{r}
+tabla.edades <- fdt(datos$Age)
+tabla.edades
+```
+
+
+## Tabla de frecuencias de Nationality
+```{r}
+tabla.nacion <- fdt_cat(datos$Nationality)
+tabla.nacion
+```
+
+
+## Tabla de frecuencias de Foot
+```{r}
+tabla.pie <- fdt_cat(datos$Preferred.Foot)
+tabla.pie
+```

@@ -1,0 +1,21 @@
+---
+title: "Estructuras de datos vectores y dataframes"
+author: "Rubén Pizarro Gurrola"
+date: "13/11/2021"
+output: html_document
+---
+
+# Vectores y data.frames
+
+## Vectores
+
+Conjunto de elementos c()
+
+```{r}
+edades <- c(23, 25, 34, 43, 56, 65, 18, 19, 23, 25, 43)
+generos <- c(rep('M', 5), rep('F', 6))
+
+edades
+generos
+```
+
