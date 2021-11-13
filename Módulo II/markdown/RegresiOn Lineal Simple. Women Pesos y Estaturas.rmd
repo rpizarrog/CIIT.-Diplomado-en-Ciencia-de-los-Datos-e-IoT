@@ -2,10 +2,13 @@
 title: "Regresión Lineal Simple. Women Pesos y Estaturas"
 author: "Rubén Pizarro Gurrola"
 date: "12/11/2021"
-output: html_document
-editor_options: 
-  markdown: 
-    wrap: 72
+output: 
+  html_document: 
+    toc: yes
+    toc_depth: 5
+    code_folding: hide
+    toc_float: yes
+    number_sections: yes
 ---
 
 # Objetivo
@@ -49,33 +52,37 @@ library(mosaic) # Para distribución normal
 
 ## Caso 1: Women pesos y estaturas
 
-Caso de Women pesos y wstaturas. hay que aplicar un modelo de regresión
-lineal para predecir el peso en relación a la estatura de mujeres
-americanas.
+Caso de Women pesos y estaturas de mujeres 
+
+Hay que aplicar un modelo de regresión
+lineal para predecir peso en relación a la estatura de mujeres americanas.
 
 Es un conjunto de datos provistos por los paquetes base de R, se
 encuentra varios de ellos con la función \*data()\* y se utilizará el de
-nombre \*women()\*.
+nombre \*women\*.
 
 Los datos son promedios pesos y estaturas de mujeres de Estados Unidos.
 
-El ejemplo identifica a $x$ como la cantidad de estudiante de una
-escuela que están cerca de un restaurante pizzas y $y$ el valor de las
-ventas registradas.
+El ejemplo identifica a $x$ como la estatura de las mujeres y $y$ el valor del peso.
 
 # Desarrollo
 
 ## Cargar datos
 
+La variable estatura 'x' está dada en pulgadas.
+La variable peso 'y' es en libras.
+
 ```{r}
-# Como cargar los datos
+datos <- women
+colnames(datos) <- c("estatura", "peso")
+datos
 
 ```
 
 ## Describir los datos
 
 ```{r}
-# summary(datos)
+summary(datos)
 
 ```
 
@@ -83,6 +90,8 @@ ventas registradas.
 
 ```{r}
 # graficar con ggplot() la dispersón puntos en color café 
+ggplot(data = datos, aes(x = estatura, y = peso)) +
+  geom_point(col="brown")
 
 ```
 
@@ -91,10 +100,11 @@ ventas registradas.
 Cual es la correlación y su interpretación
 
 ```{r}
-# Estimar la corelacción 
-#correla <- cor(peso, estatura)
-#correla
+# Estimar la correlación 
+correla <- cor(datos$peso, datos$estatura)
+correla
 ```
+El valor de la correlación es 0.99 significa que existe una relación muy muy fuerte entre la estatura de las mujeres con respecto al peso de las mismas, en este conjunto de datos.
 
 ## Regresión lineal simple
 
