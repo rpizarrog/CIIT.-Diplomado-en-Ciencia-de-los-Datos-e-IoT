@@ -1,0 +1,41 @@
+---
+title: "Diagrama de Dispersión"
+author: "Rubén Pizarro Gurrola"
+date: "14/11/2021"
+output: powerpoint_presentation
+---
+
+## Diagrama de dispersión 
+
+Es una gráfica en donde participan dos ejes 'x' y 'y' y cada uno con de ellos valores numéricos de tal manera que el diagrama refleja puntos en la relación que existe entre 'x' y 'y.
+
+Es una gráfica que representa coordenada de puntos en ejes 'x' y 'y'
+
+## Cargar librerías
+```{r}
+library (ggplot2)
+```
+
+
+## Crear datos
+```{r}
+pesos <- rnorm(n = 20, mean = 60, sd = 2)
+estaturas <- rnorm(n = 20, mean = 160, sd = 10)
+datos <- data.frame(pesos, estaturas)
+
+
+```
+## Observar los datos
+
+```{r}
+datos
+```
+
+## Diagrama de dispersión
+```{r}
+ggplot(datos) +
+    geom_point(aes(x = estaturas, y = pesos)) +
+    ggtitle(label = "Relación pesos estaturas", subtitle = "Dispersión")
+
+```
+
