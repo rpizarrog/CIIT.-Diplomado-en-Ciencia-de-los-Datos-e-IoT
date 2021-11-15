@@ -1,0 +1,55 @@
+---
+title: "Diagrama de Barra"
+author: "Rubén Pizarro Gurrola"
+date: "14/11/2021"
+output: powerpoint_presentation
+---
+
+\#\#Diagrama de barra
+
+El diagrama de Barra representa frecuencias de datos categóricos o clases
+
+## Cargar librerías
+
+```{r message=FALSE, warning=FALSE}
+library(readr)
+library (ggplot2)
+library(dplyr)
+```
+
+## Crear datos
+
+```{r message=FALSE, warning=FALSE}
+datos <- read.csv("https://raw.githubusercontent.com/rpizarrog/Probabilidad-y-EstadIstica-VIRTUAL-DISTANCIA/main/datos/datos.FIFA.limpios.csv", encoding = "UTF-8", stringsAsFactors = TRUE)
+
+
+```
+
+## Observar los datos
+
+Primeros seis
+
+```{r}
+head(datos$Nationality)
+```
+
+## Observar los datos
+
+Últimos seis
+
+```{r}
+tail(datos$Nationality)
+```
+
+## Diagrama de barra
+
+Países que tienen mas jugadores registrados
+
+```{r}
+datos %>% 
+  group_by(Nationality) %>%
+  count %>%
+  filter(n >=500) %>%
+  ggplot(aes(x = Nationality, y = n)) + 
+  geom_bar(stat = "identity")
+```
