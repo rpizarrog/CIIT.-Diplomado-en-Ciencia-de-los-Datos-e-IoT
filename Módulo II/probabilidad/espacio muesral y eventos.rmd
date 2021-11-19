@@ -1,0 +1,172 @@
+---
+title: "Espacio muestral y Eventos"
+author: "Rubén Pizarro Gurrola"
+date: "19/11/2021"
+output: powerpoint_presentation
+---
+
+
+## Objetivo 
+
+Determinar un espacio muestral y posibles eventos de un experimnto
+
+Experimento es provocar algún proceso para obtener resultados (Pizarro, 2021).
+
+Espacio muestral. Todos los posible resultados de un experimento
+
+Eventos son conjuntos que forman parte del espacio muestral
+
+## Fundamento teórico
+
+$$
+0 \le Prob.E \le 1
+$$
+
+$$
+0 \le Prob.E \le 100%
+$$
+
+## Desarrollo
+
+## Cargar librerías
+```{r message=FALSE, warning=FALSE}
+library(ggplot2) # gráficos
+library(mosaic) # gráficos
+library(dplyr)  # procesar datos
+```
+
+## Sembrar semilla
+```{r}
+set.seed(2021)
+```
+
+
+## Nombres de personas y actividad profesional
+
+Formar un espacio muestral
+
+$$
+s =\text {es todo el espacio muestral}
+$$
+
+```{r}
+nombres <- c("CARLOS", "PACO", "LUIS", "ERNESTO", "JAIME", "PATY", "LOURDES" ,"ADRIANA", "JOSE", "CRISTINA")
+profesiones <- c("INGENIERO", "HUMANISTA", "OTRA")
+
+deportes <- c("FUTBOL", "KARATE", "ATLETISMO", "BASQUETBOL", "AJEDREZ", "TENIS")
+
+nombres
+
+profesiones
+
+```
+
+## Creando espacios muestrales
+```{r}
+N <- 10
+S <- data.frame(nombres, profesion = sample(x = profesiones, size = N, replace = TRUE, prob = c(0.40, 0.30, 0.30)), deporte = sample(x = deportes, size = N, replace = TRUE))
+
+```
+
+## Espacio muestral
+```{r}
+S
+```
+
+
+## Crear eventos
+Crear subconjuntos a partir del espacio muestral
+```{r}
+ingenieros <- filter(S, profesion == 'INGENIERO') 
+humanistas <- filter(S, profesion == 'HUMANISTA') 
+otras <- filter(S, profesion == 'OTRA') 
+
+
+futbol <- filter(S, deporte == 'FUTBOL')  
+basquetbol <- filter(S, deporte == 'BASQUETBOL')  
+
+
+
+```
+
+## Ingenieros
+```{r}
+ingenieros
+```
+
+## Humanistas
+```{r}
+humanistas
+```
+
+## Otros
+```{r}
+otras
+```
+
+## Futbol
+```{r}
+futbol
+```
+
+
+## Basquetbol
+
+```{r}
+basquetbol
+```
+
+
+## ¿Para qué sirven determinar eventos?
+
+Sirven para estimar probabilidades bajo la siguiente fórmula
+
+$$
+prob = \frac{\text{total de elementos de un evento }}{\text{total de elemtos de espacio muestral }} = \frac{f}{N}
+$$
+
+
+## ¿Cuál probabilidad de elegir a una persona que sea Ingeniero?
+
+La función **length()** es para vectores, la función **nrow()** es para data.frame
+```{r}
+prob <- nrow(ingenieros) / N
+prob <- round(prob * 100, 2)
+paste("La probabilidad de elegir a una persona que sea Ingeniero es: ", prob, "%")
+```
+
+## ¿Cuál probabilidad de elegir a una persona que practique AJEDREZ?
+```{r}
+ajedrez <- filter(S, deporte == 'AJEDREZ')
+prob <- nrow(ajedrez) / N
+prob <- round(prob * 100, 2)
+paste("La probabilidad de elegir a una persona que practique AJEDREZ es: ", prob, "%")
+```
+
+
+## ¿Cuál es la probabildia de elegir a una persona que sea INGENIERO Y practique AJEDREZ?
+
+Se pueden unir los eventos
+```{r}
+prob <- nrow(intersect(ingenieros, ajedrez)) / N
+prob <- round(prob * 100, 2)
+paste("La probabilidad de elegir a una persona que se INGENIERO y practique AJEDREZ es: ", prob, "%")
+```
+
+
+## Con filter con dos expresiones
+```{r}
+ingenieros.ajedrez <- filter(S, profesion == 'INGENIERO' & deporte == 'AJEDREZ')
+ingenieros.ajedrez
+```
+
+
+## Union de INGENIEROS con HUMANISTAS
+```{r}
+union (ingenieros, humanistas)
+```
+
+
+
+
+# Interpretación
