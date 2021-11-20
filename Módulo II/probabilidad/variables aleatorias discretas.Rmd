@@ -1,0 +1,159 @@
+---
+title: "variables aleatorias discretas"
+author: "Rubén Pizarro Gurrola"
+date: "19/11/2021"
+output: powerpoint_presentation
+---
+
+## Variables aleatorias discretas
+
+Variables aleatorias sirven para estimar probabilidades.
+
+## Variables aleatorias discretas
+
+Son valores numéricos enteros asociados a una probabilidad.
+
++-----------------------+----------------------+-----------------------+
+| x                     | probabilidad         | Acumulada %           |
++:=====================:+:====================:+:=====================:+
+| 0                     | 0.10                 | 10                    |
++-----------------------+----------------------+-----------------------+
+| 1                     | 0.20                 | 30                    |
++-----------------------+----------------------+-----------------------+
+| 2                     | 0.30                 | 60                    |
++-----------------------+----------------------+-----------------------+
+| 3                     | 0.25                 | 85                    |
++-----------------------+----------------------+-----------------------+
+| 4                     | 0.15                 | 100                   |
++-----------------------+----------------------+-----------------------+
+|                       | 1                    |                       |
++-----------------------+----------------------+-----------------------+
+
+## Construyendo la tabla de distribución
+
+```{r}
+tabla <- data.frame(x = 0:4, prob.x = c(0.10, 0.20, 0.30, 0.25, 0.15), prob.acum.x = cumsum(c(0.10, 0.20, 0.30, 0.25, 0.15)))
+
+              
+
+```
+
+## Mostrando la tabla de distribución
+
+```{r}
+tabla
+
+```
+
+## Crear una función para x
+
+La función sirve para devolver la probabilidad con respeto a un valor específico de x .
+
+La función sirve para estimar probabilidades de la tabla conforme a un valor de x.
+
+```{r}
+f.prob.x <- function(x) {
+posicion = x + 1
+paste(tabla$prob.x[posicion] * 100, "%")
+}
+
+
+```
+
+## Cúal es la probablidad de que x sea igual 1
+
+```{r}
+paste("la probablidad de que x sea igual 1 es:", f.prob.x(1))
+```
+
+## Cúal es la probablidad de que x sea igual 3
+
+```{r}
+paste("la probablidad de que x sea igual 3 es:", f.prob.x(3))
+```
+
+## Cúal es la probablidad de que x sea igual 2
+
+```{r}
+paste("la probablidad de que x sea igual 2 es:", f.prob.x(2))
+```
+
+## Crear una función para acumulado de x
+
+La función sirve para devolver la probabilidad acumulada con respeto a un valor específico de x .
+
+Puede ser mayor que x, menor que x, mayor o igual que x, menor o igual que x
+
+## Programar función
+
+```{r}
+# Tipo de comparación
+# <= 1
+# < 2
+# > 3
+# >= 4
+f.prob.acum.x <- function(x, tipo) {
+if (tipo == 1) { # <=
+    posicion = x + 1
+    salida <- paste(tabla$prob.acum.x[posicion] * 100, "%")
+  }
+  if (tipo == 2) { # <
+    posicion <- x
+    salida <- paste(tabla$prob.acum.x[posicion] * 100, "%")
+  }
+  if (tipo == 3) { # >
+    posicion <- x + 1
+    prob <- (1 - tabla$prob.acum.x[posicion]) * 100
+    salida <- paste(prob, "%")
+  }
+  if (tipo == 4) { # >=
+    posicion <- x
+    prob <- (1 - tabla$prob.acum.x[posicion]) * 100
+    salida <- paste(prob, "%")
+  }
+  salida
+}
+
+
+```
+
+## Cuál es la probabilidad para cuando x se menor o igual a 3
+
+$$
+P(x \le 3) = P(x=0) + P(x=1) + P(x=2) + P(x=3)
+$$
+
+```{r}
+f.prob.acum.x(x = 3, tipo = 1)
+```
+
+## Cuál es la probabilidad para cuando x se menor  a 3
+
+$$
+P(x < 3) = P(x=0) + P(x=1) + P(x=2)
+$$
+
+```{r}
+f.prob.acum.x(3, 2)
+```
+
+
+## Cuál es la probabilidad para cuando x sea mayor a 3
+
+$$
+P(x > 3) =  1 - \sum{P(x=0), P(x=1), P(x=2), P(x=3)}
+$$
+
+```{r}
+f.prob.acum.x(3, 3)
+```
+
+## Cuál es la probabilidad para cuando x se mayor o igual a 3
+
+$$
+P(x \ge 3) = 1 - \sum {P(x=0) , P(x=1) , P(x=2)}
+$$
+
+```{r}
+f.prob.acum.x(3, 4)
+```
