@@ -52,7 +52,7 @@ La función sirve para devolver la probabilidad con respeto a un valor específi
 La función sirve para estimar probabilidades de la tabla conforme a un valor de x.
 
 ```{r}
-f.prob.x <- function(x) {
+f.prob.x <- function(tabla, x) {
 posicion = x + 1
 paste(tabla$prob.x[posicion] * 100, "%")
 }
@@ -63,19 +63,19 @@ paste(tabla$prob.x[posicion] * 100, "%")
 ## Cúal es la probablidad de que x sea igual 1
 
 ```{r}
-paste("la probablidad de que x sea igual 1 es:", f.prob.x(1))
+paste("la probablidad de que x sea igual 1 es:", f.prob.x(tabla, 1))
 ```
 
 ## Cúal es la probablidad de que x sea igual 3
 
 ```{r}
-paste("la probablidad de que x sea igual 3 es:", f.prob.x(3))
+paste("la probablidad de que x sea igual 3 es:", f.prob.x(tabla, 3))
 ```
 
 ## Cúal es la probablidad de que x sea igual 2
 
 ```{r}
-paste("la probablidad de que x sea igual 2 es:", f.prob.x(2))
+paste("la probablidad de que x sea igual 2 es:", f.prob.x(tabla, 2))
 ```
 
 ## Crear una función para acumulado de x
@@ -92,7 +92,7 @@ Puede ser mayor que x, menor que x, mayor o igual que x, menor o igual que x
 # < 2
 # > 3
 # >= 4
-f.prob.acum.x <- function(x, tipo) {
+f.prob.acum.x <- function(tabla, x, tipo) {
 if (tipo == 1) { # <=
     posicion = x + 1
     salida <- paste(tabla$prob.acum.x[posicion] * 100, "%")
@@ -124,7 +124,7 @@ P(x \le 3) = P(x=0) + P(x=1) + P(x=2) + P(x=3)
 $$
 
 ```{r}
-f.prob.acum.x(x = 3, tipo = 1)
+f.prob.acum.x(tabla = tabla, x = 3, tipo = 1)
 ```
 
 ## Cuál es la probabilidad para cuando x se menor  a 3
@@ -134,7 +134,7 @@ P(x < 3) = P(x=0) + P(x=1) + P(x=2)
 $$
 
 ```{r}
-f.prob.acum.x(3, 2)
+f.prob.acum.x(tabla = tabla, 3, 2)
 ```
 
 
@@ -145,7 +145,7 @@ P(x > 3) =  1 - \sum{P(x=0), P(x=1), P(x=2), P(x=3)}
 $$
 
 ```{r}
-f.prob.acum.x(3, 3)
+f.prob.acum.x(tabla, 3, 3)
 ```
 
 ## Cuál es la probabilidad para cuando x se mayor o igual a 3
@@ -155,5 +155,25 @@ P(x \ge 3) = 1 - \sum {P(x=0) , P(x=1) , P(x=2)}
 $$
 
 ```{r}
-f.prob.acum.x(3, 4)
+f.prob.acum.x(tabla, 3, 4)
 ```
+
+## Crear otra tabla de distribución 
+
+```{r}
+tabla2 <- data.frame(x = 0:6, prob.x = c(0.10, 0.20, 0.30, 0.25, 0.10, 0.03, 0.02), prob.acum.x = cumsum(c(0.10, 0.20, 0.30, 0.25, 0.10, 0.03, 0.02)))
+
+```
+
+## Mostrar tabla2
+
+```{r}
+tabla2
+
+```
+
+## Probabilida de que x sea menor o igual que 5
+```{r}
+f.prob.acum.x(tabla = tabla2, x = 5, 1)
+```
+
