@@ -1,0 +1,148 @@
+---
+title: "EVENTOS INDEPENDIENTES"
+author: "Rubén Pizarro Gurrola"
+date: "19/11/2021"
+output: powerpoint_presentation
+---
+
+## Objetivo
+
+Calcular probabilidad para eventos independientes
+
+## Fundamento teórico
+
+Los eventos independientes son aquelos eventos que no interfieren entre s+i o que son del tipo exclusuón mutua
+
+## Crear eventos
+
+```{r}
+ingenieros <- c("CARLOS", "PATY", "RUBEN", "CRISTINA", "LOURDES")
+humanistas <- c("LUIS", "ADRIANA", "PEDRO", "CRISTINA")
+investigadores <- c("Xóchitl", "Mary")
+
+S <- c(ingenieros, humanistas, investigadores)
+
+```
+
+## Espacio muestral S
+
+```{r}
+S
+```
+
+## Ingenieros
+
+```{r}
+ingenieros
+```
+
+## Humanistas
+
+```{r}
+humanistas
+```
+
+## Investigadores
+
+```{r}
+investigadores
+```
+
+## Valor de N
+
+```{r}
+N <- length(S)
+N
+```
+
+## Union de eventos independientes
+
+Sumando sus probabilidades Se utiliza length() porque son vectores 
+
+¿Cuál es la probabilidad de que sea ingeniero?
+
+```{r}
+prob <- length(ingenieros) / N
+prob <- paste(round(prob * 100, 2), "%")
+prob
+```
+
+## Humanista
+
+¿Cuál es la probabilidad de que sea humanista?
+
+```{r}
+prob <- length(humanistas) / N
+prob <- paste(round(prob * 100, 2), "%")
+prob
+```
+
+## Investigadores
+
+¿Cuál es la probabilidad de que sea investigador?
+
+```{r}
+prob <- length(investigadores) / N
+prob <- paste(round(prob * 100, 2), "%")
+prob
+```
+
+## Cuál es la probabilidad de que sea ingeniero O investigador?
+
+Se suman las probabilidades
+
+$$
+P(A U B) = P(A) + P(B)
+$$
+
+$$
+P(ingeniero \cup investigador) = P(ingeniero) + P(investigador)
+$$
+
+```{r}
+prob <- (length(ingenieros) / N) + (length(investigadores) / N)
+prob <- paste(round(prob * 100, 2), "%")
+prob
+```
+
+
+## Intersección para eventos independientes 
+
+Cuando son eventos excluyentes
+¿Cuál es la probabilidad de ingenieros **y** humanistas?
+
+$$
+P(A \cap B) = P(A) * P(B) 
+$$
+
+$$
+P(ingeniero \cap humanistas) = P(ingenieros) * P(humanistas) 
+$$
+
+## Calculando 
+
+```{r}
+prob.ingenieros <- length(ingenieros) / N
+prob.humanistas <- length(humanistas) / N
+
+prob.inter.ingenieros.humanistas <- prob.ingenieros * prob.humanistas 
+
+prob.inter.ingenieros.humanistas
+
+```
+
+## Comprobar con intersección
+
+```{r}
+intersect(ingenieros, humanistas)
+```
+## Su probabilidad 
+¿Cuánto representa esa intersección?. 
+$$
+prob = \frac{f}{N}
+$$
+
+```{r}
+length(intersect(ingenieros, humanistas)) / N
+```
+

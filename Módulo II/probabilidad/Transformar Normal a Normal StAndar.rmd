@@ -1,0 +1,211 @@
+---
+title: "Transformar Normal a Normal Stándar"
+author: "Rubén Pizarro Gurrola"
+date: "20/11/2021"
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
+    toc_depth: 6
+bibliography: references.bib
+---
+
+# Objetivo
+
+Transforamr distribución normal a normal estándar y calcular probabildiades
+
+# Fundamento teórico
+
+¿Porque Z? En general, el valor de $Z$ se interpreta como el número de desviaciones estándar que están comprendidas entre el promedio y un cierto valor de variable $x$.
+
+Se identifica $z$ como la diferencia entre un valor de la variable y el promedio, expresada esta diferencia en cantidad de desviaciones estándar.[@medwave2011].
+
+# Descripción
+
+Cargar librerías y datos para representar una distribución normal y transformar a distribución normal estándar
+
+# Desarrollo
+
+## Cargar librerías
+
+```{r message=FALSE, warning=FALSE}
+library(cowplot) # Gráficos
+library(ggplot2) # Gráfico
+library(mosaic)
+library(dplyr)  # Para proesar filtrar ordnar con arrange
+```
+
+## Crear datos
+
+### Inicializando variables
+
+Estas variables son para generar la población.
+
+```{r}
+n <- 200
+media <- 175
+desv <- 10
+```
+
+### Pesos de personas
+
+[![Peso de Personas. Fuente: https://nacionfarma.com/descubren-factor-clave-la-perdida-peso-largo-plazo/](images/pesos%20personas.jpg "Peso de Personas. Fuente: https://nacionfarma.com/descubren-factor-clave-la-perdida-peso-largo-plazo/"){width="300"}](https://nacionfarma.com/descubren-factor-clave-la-perdida-peso-largo-plazo/)
+
+```{r}
+set.seed(2021)
+n <- 200
+estaturas<- rnorm(n = n, mean = media, sd = desv)
+estaturas
+```
+
+## Determinar los parámetros media y desviación de los datos
+
+
+$$
+\sigma \text{ desviación estándar de población} \\ 
+\mu \text{ media de la población}
+$$
+
+
+```{r}
+media.p <- mean(estaturas)
+desv.p <- sd(estaturas)
+
+media.p; desv.p
+
+
+```
+
+## Graficar la distribución normal
+
+```{r}
+g1 <- plotDist(dist = "norm", mean = media.p, sd = desv.p, type = "h", xlab = "x's = Estaturas")
+g1
+
+```
+
+## Transformar a distribución normal estándar
+
+z se interpreta como los valores que están a la derecha de una distribución normal con media igual a cero y desviación igual a 1.
+
+$$
+z = \frac{x - \mu}{\sigma}
+$$
+
+```{r}
+x = seq(160, 190, 5)
+# z ?
+
+f.devolver.z <- function(x, media, desv) {
+  z <- (x - media) / desv
+  z
+}
+
+z <- f.devolver.z(x = x, media = media.p, desv = desv.p)
+
+x; z
+
+
+```
+
+## Data.frame de x's y z's
+
+Por cada valor de x's su correspondiente valor de z
+
+```{r}
+equivalencias <- data.frame (x = estaturas, z = f.devolver.z(x = estaturas, media = media, desv = desv))
+# equivalencias
+```
+
+### Ordenando equivalencias
+
+```{r}
+equivalencias <- arrange(equivalencias, x)
+head(equivalencias, 20)
+tail(equivalencias, 20)
+
+```
+
+## Normal estándar
+
+La media debe ser 0 y la desviación es 1
+
+$$
+\mu = 0 \\
+\sigma = 1
+$$
+
+### Gráfica de normal estándar
+
+```{r}
+
+g2 <- plotDist(dist = "norm", mean = 0, sd = 1, type = "h", xlab = "Z's")
+g2
+```
+
+### Gráficas al al mismo renglón
+
+```{r}
+plot_grid(g1, g2, nrow = 1, ncol=2)
+
+```
+
+### 
+
+## Calcular probabildiades
+
+### Cuál es la probabildia de que x esté por encima de 180
+
+$$
+P(x> 180)
+$$
+
+```{r}
+x <- 180
+prob1 <- round(pnorm(q = x, mean = media.p, desv.p, lower.tail = FALSE) * 100, 2)
+paste(prob1, "%") 
+
+
+
+```
+
+### Gráfica
+
+```{r}
+g3 <- plotDist(dist = "norm", mean = media.p, sd = desv.p, type = "h", xlab = "x's", groups = x >= 180)
+# g3
+
+```
+
+### Transformar 180 a z
+
+```{r}
+x <- 180
+z <- f.devolver.z(x = x, media = media.p, desv = desv.p)
+z
+
+
+```
+
+### La probabilida con respecto a z
+
+```{r}
+prob2 <- round(pnorm(q = z, mean = 0, sd=1, lower.tail = FALSE) * 100, 2)
+paste(prob2, "%") 
+```
+
+### Gráfica con respecto a Z
+
+```{r}
+g4 <- plotDist(dist = "norm", mean = 0, sd = 1, type = "h", xlab = "z's", groups = x >= z)
+#g4
+```
+
+### Mismo renglón
+
+```{r}
+plot_grid(g3, g4, nrow = 1, ncol=2)
+```
+
+# Bibliografía

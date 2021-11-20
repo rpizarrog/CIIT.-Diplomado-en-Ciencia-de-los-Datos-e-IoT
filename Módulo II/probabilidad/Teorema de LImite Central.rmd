@@ -1,0 +1,247 @@
+---
+title: "Teorema de Límite Central"
+author: "Rubén Pizarro Gurrola"
+date: "20/11/2021"
+output: html_document
+---
+
+# Objetivo 
+
+Interpretar teorema de límite central
+
+# Descripción
+
+Se interpreta el teorema de límite central
+
+# Desarrollo 
+
+## Cargar librerías
+
+```{r message=FALSE, warning=FALSE}
+library(cowplot) # Gráficos
+library(ggplot2) # Gráfico
+library(mosaic)
+library(dplyr)  # Para procesar filtrar ordenar con arrange
+library(knitr)
+```
+
+
+## Crear datos de Población
+
+Crear datos que no son distribución normal. Es un Población.
+```{r}
+set.seed(2021)
+personas <- data.frame(edad = sample(x = 18:40, size = 100, replace = TRUE))
+
+personas$edad
+
+stem(personas$edad)
+
+
+```
+
+### Análisis descriptivo de la pobación
+```{r}
+summary(object = personas$edad)
+```
+
+### MEdia de la pobación 
+
+MEdia de la edad
+```{r}
+p.media <- mean(personas$edad)
+p.media
+```
+
+### Graficar los datos
+
+### Preparamos una función 
+```{r}
+
+f.graf.hist.dens <- function (datos, media) {
+  g <- ggplot(data = datos, aes(x = datos[,1])) +
+  geom_histogram(aes(y = ..density..),
+                 colour = 1, fill = "lightblue") +
+  geom_density(lwd = 1.2,
+               linetype = 2,
+               colour = 2) +
+  ggtitle(label = "Distribución", subtitle = paste("Media", media))
+  g
+}
+
+```
+
+
+#### Histograma de la población
+```{r}
+g <- f.graf.hist.dens(personas, p.media)
+# g
+
+```
+
+
+
+### Determinar una muestra m1
+
+```{r}
+m1 <- data.frame(edad = sample(personas$edad, size = 20, replace = FALSE))
+# m1
+
+```
+
+#### Media de m1
+```{r}
+m1.media <- mean(m1$edad)
+m1.media
+```
+
+#### Error muestral
+
+La diferencia entre media poblacional y media muestral. 
+```{r}
+err.muestral <- p.media - m1.media
+err.muestral
+```
+
+#### Gráfica la muestra
+
+```{r}
+g1 <- f.graf.hist.dens(m1, m1.media)
+
+```
+
+### Determinar una muestra m2
+
+```{r}
+m2 <- data.frame(edad = sample(personas$edad, size = 20, replace = FALSE))
+m2
+
+```
+
+#### Media de m2
+```{r}
+m2.media <- mean(m2$edad)
+m2.media
+```
+
+#### Error muestral
+
+La diferencia entre media poblacional y media muestral. 
+```{r}
+err.muestral <- p.media - m2.media
+err.muestral
+```
+
+#### Gráfica la muestra
+
+```{r}
+g2 <- f.graf.hist.dens(m2, m2.media)
+
+```
+
+### Determinar una muestra m3
+
+```{r}
+m3 <- data.frame(edad = sample(personas$edad, size = 20, replace = FALSE))
+m3
+
+```
+#### Media de m3
+```{r}
+m3.media <- mean(m3$edad)
+m3.media
+```
+
+#### Error muestral
+
+La diferencia entre media poblacional y media muestral. 
+```{r}
+err.muestral <- p.media - m3.media
+err.muestral
+```
+
+#### Gráfica la muestra
+
+```{r}
+g3 <- f.graf.hist.dens(m2, m3.media)
+
+```
+
+
+### Histogramas de población y muestras
+```{r message=FALSE, warning=FALSE}
+plot_grid(g, g1, g2, g3, nrow = 2, ncol=2)
+```
+
+### Media de las tres muestras
+```{r}
+c(m1.media, m2.media, m3.media)
+
+sum(m1.media, m2.media, m3.media)
+
+mean(c(m1.media, m2.media, m3.media))
+
+```
+
+
+## Distribución muestral de la media
+
+Significa muchas muestras, tantas como resulte de las combinaciones tal vez infinito, para determinar la media de todas las medias de las muestras y acerca a la media de la población.
+
+
+## Determinar 100 muestras
+```{r}
+nm <- 100
+n <- 20
+
+```
+
+Hacerlo por un for mediante una lista 
+```{r}
+lista.muestras = as.list(NULL)
+for (i in 1:nm) {
+    lista.muestras[[i]] <- sample(x = personas$edad, size = n, replace = FALSE)
+    
+}
+
+```
+
+#### Convertir la lista a un dataframe
+```{r}
+muestras <- data.frame(lista.muestras)
+
+muestras <- data.frame(t(muestras)) # reng a columnas
+
+colnames(muestras) <- paste0("X", 1:n)
+rownames(muestras) <- paste0("M", 1:nm)
+
+# muestras
+```
+
+#### Agregar media de cada muestra 
+
+```{r}
+muestras <- cbind(muestras, medias = apply(X =  muestras, 2, mean))
+
+muestras <- cbind(muestras, err.muestral = (p.media - muestras$medias))
+
+kable(head(muestras, 10), caption = "Distribución de muestras")
+```
+
+
+#### Media de todas las muestras
+```{r}
+medias.muestrales <- mean(muestras$medias)
+medias.muestrales
+```
+
+
+#### Histograma de la distribución de medias
+```{r}
+g.dist <- f.graf.hist.dens(datos = data.frame(muestras$medias), media = medias.muestrales
+)
+
+g.dist
+```
+
+
