@@ -1,0 +1,179 @@
+---
+title: "Números aleatorios de distribución normal y cálculo de probabilidades"
+author: "Rubén Pizarro Gurrola"
+date: "20/11/2021"
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
+    toc_depth: 6
+---
+
+# Objetivo
+
+Generar números aleatorio y representarlo en una gráfica campana o de Gauss
+
+# Descripción
+
+Se utiliza la función *rnorm*() para generar aleatorios.
+
+$$
+\sigma \text { se requiere } \\ \mu \text { se necesita}
+$$
+
+# Desarrollo
+
+## Cargar librerías
+
+```{r message=FALSE, warning=FALSE}
+library(cowplot) # Gráficos
+library(ggplot2) # Gráfico
+library(mosaic)
+```
+
+## Inicializar variables
+
+```{r}
+media <- 5
+desv <- 2
+```
+
+## Genera números aleatorios
+
+```{r}
+n <- 100
+numeros <- rnorm(n = n, mean = media, sd = desv)
+
+```
+
+## Mostrar números aleatorios
+
+```{r}
+numeros
+```
+
+
+## Gráfica de campana
+
+## Transformar números a data.frame
+```{r}
+numeros <- data.frame(nums = numeros)
+```
+
+
+## Gráfica de campana con ggplot
+
+```{r}
+g1 <- ggplot(data = numeros) +
+  geom_point(aes(x=nums, y= dnorm(x = nums, mean = media, sd = desv)), col='red') +
+  geom_line(aes(x=nums, y= dnorm(x = nums, mean = media, sd = desv)), col='blue')
+
+
+```
+
+## Gráfica de campana con mosaic
+```{r}
+g2 <- plotDist(dist = "norm", mean = media, sd = desv)
+
+
+```
+
+## Las dos gráficas al mismo tiempo
+
+```{r}
+
+plot_grid(g1, g2, nrow=1, ncol=2)
+
+```
+
+
+## Calcular probabilidades
+
+### ¿Cual es la probabildia x <= 2?
+
+$$
+P (x <= 2)
+$$
+
+
+```{r}
+prob <- round(pnorm(q = 2, mean = media, sd = desv) * 100, 2)
+prob
+```
+
+
+### Graficando el área bajo la curva
+```{r}
+g3 <- plotDist("norm", mean = media, sd = desv, groups = x <= 2, type = "h", xlab ="Valores de la variable continua X", ylab = "Densidad", main='Densidad',sub = paste('Me= ', media, ' D.St=', desv, "P=",prob )) 
+
+
+```
+
+
+## Las tres gráficas al mismo tiempo
+
+```{r}
+
+plot_grid(g1, g2, g3, nrow=2, ncol=2)
+
+```
+
+
+### ¿Cual es la probabildia x >= 2?
+
+$$
+1 - P(x < 2)
+$$
+```{r}
+prob1 <- round((1 - pnorm(q = 2, mean = media, sd = desv)) * 100, 2)
+
+
+prob2 <- round(pnorm(q = 2, mean = media, sd = desv, lower.tail = FALSE) * 100, 2 )
+
+prob1; prob2
+
+
+```
+
+### Graficando 
+
+#### Graficando el área bajo la curva
+```{r}
+g4 <- plotDist("norm", mean = media, sd = desv, groups = x >= 2, type = "h", xlab ="Valores de la variable continua X", ylab = "Densidad", main='Densidad',sub = paste('Me= ', media, ' D.St=', desv, "P=",prob1 )) 
+
+
+```
+
+#### Las cuatro gráficas al mismo tiempo
+
+```{r}
+
+plot_grid(g1, g2, g3, g4, nrow=2, ncol=2)
+
+```
+
+### ¿Cual es la probabilidad de que esté entre 2 y 4?
+
+$$
+Prob = P(x=4) - P(x=2)
+$$
+
+#### Calculando la probabilidad
+```{r}
+prob <- pnorm(q = 4, mean = media, sd = desv) - pnorm(q = 2, mean = media, sd = desv)
+prob <- round(prob * 100, 2)
+prob
+
+```
+
+
+
+#### Gráfica
+
+```{r}
+g5 <- plotDist("norm", mean = media, sd = desv, groups = x >= 2 & x <=4, type = "h", xlab ="Valores de la variable continua X", ylab = "Densidad", main='Densidad',sub = paste('Me= ', media, ' D.St=', desv, "P=",prob )) 
+
+g5
+```
+
