@@ -1,0 +1,233 @@
+---
+title: "Visualizar Distribución Normal "
+author: "Rubén Pizarro Gurrola"
+date: "14/1/2022"
+output: powerpoint_presentation
+---
+
+# Objetivo
+
+Visualizar distribuciones normales
+
+# Descripción
+
+Se representan gráficas de distribuciones normales usando *plot()*, *ggplot()*, *plotDist()* y *visualize()*.
+
+Se determinan probabilidades a partir de distribución normal
+
+# Fundamento Teórico
+
+Densidad
+
+$$
+f(x)=\frac{1}{\sqrt{2\cdot\pi\cdot\sigma}}\cdot e^{(-\frac{(x-\mu)^2}{2 \cdot \sigma^2})}
+$$
+
+
+
+$$
+\pi=3.14159 \text { y } e=2.71828
+$$
+
+$$
+\mu \text { es la media poblacional}
+$$
+
+$$
+\sigma \text{ es la desviación std. poblacional poblacional}
+$$
+
+# Cargar librerías
+
+```{r message=FALSE, warning=FALSE}
+# library(cowplot) # Gráficos
+library(ggplot2) # Gráfico
+library(mosaic)
+# library(dplyr)  # Procesar, filtrar, ordenar, arrange...
+library(visualize)
+```
+
+# Ejercicio
+
+Se inicializan las variables para generar valores aleatorios y simular una población.
+
+```{r}
+n <- 200
+media <- 175
+desv <- 10
+```
+
+# Valores
+
+Se generan 200 valores aleatorios o con las condiciones de una distribución normal de media igual a $\mu = 175cm.$ y desviación de $\sigma = 10cm.$.
+
+# Valores
+
+```{r}
+set.seed(2022)
+n <- 200
+estaturas<- rnorm(n = n, mean = media, sd = desv)
+head(estaturas) # Los primeros seis
+```
+
+# Parámetros de la población
+
+Determinar los parámetros media y desviación de los datos
+
+Se identifican la media aritmética y la desviación de la población generada.
+
+# Parámetros
+
+```{r}
+media.p <- round(mean(estaturas),2)
+desv.p <- round(sd(estaturas),2)
+
+media.p; desv.p
+```
+
+
+
+# Distribución normal 
+
+Generando tabla de densidad
+
+```{r}
+dens <- dnorm(x = estaturas, mean = media.p, sd = desv.p)
+
+tabla <- data.frame(estaturas, dens)
+
+```
+
+
+# head() 
+Los primeros 10 registros
+
+```{r}
+head(tabla, 10)
+
+```
+
+# tail()
+
+Los últimos diez registros
+```{r}
+tail(tabla, 10)
+```
+
+# Visualizar la distribución normal con *plot()*
+
+```{r}
+plot(x = estaturas, y = dens, xlab = "xs = Estaturas", ylab = "Densidad", type = "p", main = "Distribución Normal", sub = paste("Media =", media.p, " Desv. Std = ", desv.p))
+```
+
+# Visualizar con ggplot() geom_line() y geom_point()
+
+```{r}
+g <- ggplot(data = tabla) +
+  geom_line(aes(x = estaturas, y = dens), col='blue') +
+  geom_point(aes(x = estaturas, y = dens), col='black')
+g
+```
+
+# Visualizar con ggplot() y vline()
+
+```{r}
+g <- g +
+  geom_vline(xintercept = media.p, col='red', linetype="dotted")
+g
+```
+
+# Visualizar con ggplot() y vline() y ggtitle()
+
+```{r}
+g <- g + ggtitle(label = "Distribución Normal", subtitle = paste("Media=", media.p, " Desv Std.=", desv.p))
+g
+```
+
+
+# Visualizar la distribución normal con plotDist()
+
+Se muestra la distribución normal con función **plotDist()** de la librería mosaic.
+
+# Distribución Normal
+
+```{r}
+g <- plotDist(dist = "norm", mean = media.p, sd = desv.p, type = "h", xlab = "x's = Estaturas")
+g
+```
+
+# Distribución Normal usando visualize
+
+```{r message=TRUE, warning=TRUE}
+g <- visualize.norm(mu = media.p, sd = desv.p)
+g
+```
+
+# Su uso
+Determinar probabilidades P(x <= 170)
+```{r}
+prob <- pnorm(q = 170, mean = media.p, desv.p, lower.tail = TRUE)
+prob
+```
+
+
+# Visualizar probabilidades
+```{r}
+g <- plotDist(dist = "norm", mean = media.p, sd = desv.p, type = "h", xlab = "x's = Estaturas", groups = x <= 170, main = paste("P(x<=170) = ", round(prob*100, 2), "%"))
+g
+```
+
+
+Determinar probabilidades P(x > 170)
+```{r}
+prob <- pnorm(q = 170, mean = media.p, desv.p, lower.tail = FALSE)
+prob
+```
+
+# Visualizar probabilidades
+```{r}
+g <- plotDist(dist = "norm", mean = media.p, sd = desv.p, type = "h", xlab = "x's = Estaturas", groups = x > 170, main = paste("P(x>170) = ", round(prob*100, 2), "%"))
+g
+```
+
+# Ejemplo
+
+Se tiene una ditribución normal cuya media poblacional es de 20.4 y desviación estándar de 2.5:
+```{r}
+media <- 20.4
+desv <- 2.5
+```
+
+
+# ¿cual es la probabilidad de que existan valores por encima de 21?
+
+# Prob
+```{r}
+prob <- pnorm(q = 21, mean = media, sd = desv, lower.tail = TRUE)
+prob
+```
+
+
+# Visualizar P(x>21)
+
+```{r}
+g <- plotDist(dist = "norm", mean = media, sd = desv, type = "h", xlab = "x's ", groups = x > 21, main = paste("P(x>21) = ", round(prob*100, 2), "%"))
+g
+```
+
+
+
+# ¿cual es la probabilidad de que existan valores entre de 21 y 21.5?
+```{r}
+prob <- pnorm(q = 21.5, mean = media, sd = desv) - pnorm(q = 21, mean = media, sd = desv)
+prob
+```
+
+
+# Visualizar P(21 < x < 21.5)
+```{r}
+g <- plotDist(dist = "norm", mean = media, sd = desv, type = "h", xlab = "x's ", groups = x >= 21 & x <= 21.5, main = paste("P(x>21) = ", round(prob*100, 2), "%"))
+g
+```
+
+
