@@ -1,0 +1,138 @@
+---
+title: "Distribución Normal Estandarizada Z"
+author: "Rubén Pizarro Gurrola"
+date: "14/1/2022"
+output: powerpoint_presentation
+---
+
+# Objetivo
+
+Transformar valores de x de una distribución normal a valores z de una  distribución normal estandarizada.
+
+# Descripción
+
+* Se transforman valores de x a z
+* Se Visualizan valores de z
+* Se identifica su uso en término de probabilidad
+
+# Fundamento Teórico
+
+$$
+z = \frac{x - \mu}{\sigma}
+$$
+
+# Librerías
+```{r message=FALSE, warning=FALSE}
+library(cowplot) # Gráficos
+library(ggplot2) # Gráfico
+library(mosaic)
+# library(dplyr)  # Procesar, filtrar, ordenar, arrange...
+library(visualize)
+```
+
+# Cargar función ¡ya PREPARADA!
+
+En la siguiente función *f.devolver.z()* se hace una simulación de transforma cualquier valor de $x$ a valores de $z$. 
+
+En el archivo que se carga a continuación, se encuentra programada una función *f.devolver.z()* para obtener el valor de z a partir de los parámetros x, media y desviación.
+
+# Source()
+
+```{r message=FALSE, warning=FALSE}
+source("https://raw.githubusercontent.com/rpizarrog/CIIT.-Diplomado-en-Ciencia-de-los-Datos-e-IoT/main/M%C3%B3dulo%20II/2022/funciones/funciones.para.distribuciones.r")
+```
+
+# Convertir cualquier valor de x a z
+
+Media igual a 21.5 y desv. std. igual a 2.5
+```{r}
+z <- f.devolver.z(x = 20, media = 21.4, desv = 2.5)
+z
+```
+
+# Convertir varios valores de x a z
+
+Se genera una secuencia de valores desde 21 a 22 de 0.025 en 0.025.
+
+Se determina la media y desviación en la misma instrucción.
+
+# Inicializar valores
+```{r}
+x <- seq(from=21, to=22, by=0.025)
+media <- mean(x)
+desv <- sd(x)
+x
+```
+
+# Crear datos de x's y z's en un data.frame()
+```{r}
+z <- f.devolver.z(x = x, media = mean(x), desv = sd(x))
+datos <- data.frame(x,z)
+```
+
+# Mostrar datos head()
+```{r}
+head(datos, 10)
+```
+
+# Mostrar datos tail()
+```{r}
+tail(datos, 10)
+```
+
+# Crear Normal con geomDist()
+```{r}
+g1 <- plotDist(dist = "norm", xlab = "x's", ylab = "Dens", mean = media, sd = desv, type = "h", main="Normal", sub=paste("Media=", round(media,2), " Desv.Std=",round(desv,2)))
+
+```
+
+# Crear Normal Estándar Z con geomDist()
+```{r}
+g2 <- plotDist(dist = "norm", xlab = "z's", ylab = "Dens", type = "h", main="Normal Std", sub=paste("Media=0 ", " Desv.Std=1"))
+
+```
+
+# Visualizar x's y z's
+```{r}
+plot_grid(g1, g2, ncol = 2)
+```
+
+# Su uso
+
+Determinar probabilidades normal
+
+# Probabilidad de encontrar un valor entre 21.5 y 21.8. P(21.5 <= x <= 21.8).
+```{r}
+prob <- pnorm(q = 21.8, mean = media, sd = desv) - pnorm(q = 21.5, mean = media, sd = desv)
+prob
+```
+
+# Visualizar probabilidad con distribución normal 
+```{r}
+g3 <- plotDist(dist = "norm", xlab = "x's", ylab = "Dens", mean = media, sd = desv, type = "h", groups = x >= 21.5 & x <=21.8, main="Normal", sub=paste("Media=", round(media,2), " Desv.Std=",round(desv,2), "; P(21.5 <= x  <= 21.8) ",round(prob*100,2), "%"))
+g3
+```
+
+Determinar probabilidades normal
+
+# Probabilidad de encontrar un valor entre 21.5 y 21.8. P(21.5 <= x <= 21.8) con valores de z.
+```{r}
+z2 <- f.devolver.z(x = 21.8, media = media, desv = desv)
+z1 <- f.devolver.z(x = 21.5, media = media, desv = desv)
+z2; z1
+
+prob <- pnorm(q = z2) - pnorm(q = z1)
+prob
+```
+
+# Visualizar probabilidad con distribución normal estándar Z
+
+```{r}
+g4 <- plotDist(dist = "norm", xlab = "z's", ylab = "Dens", type = "h", groups = x >= z1 & x <= z2, main="Normal Std Z", sub=paste("P(",round(z1, 4), " <= x  <= ", round(z2, 4),")" ,round(prob*100,2), "%"))
+g4
+```
+
+
+# Interpretación 
+
+Pendiente

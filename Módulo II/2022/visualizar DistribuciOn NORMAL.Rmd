@@ -230,4 +230,6 @@ g <- plotDist(dist = "norm", mean = media, sd = desv, type = "h", xlab = "x's ",
 g
 ```
 
+# Interpretración 
 
+Pendiente
