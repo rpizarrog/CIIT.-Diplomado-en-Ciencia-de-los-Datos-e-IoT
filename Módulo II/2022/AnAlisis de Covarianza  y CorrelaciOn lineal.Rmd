@@ -1,0 +1,232 @@
+---
+title: "Análisis de Covarianza  y Correlación lineal"
+author: "Rubén Pizarro Gurrola"
+date: "15/1/2022"
+output: powerpoint_presentation
+---
+
+# Objetivo
+
+Determinar el valor de la correlación entre dos variables de un conjunto de datos.
+
+Interpretar el valor de la correalción.
+
+Visualizar la relación de los datos.
+
+# Descripción
+
+* Generar un conjunto de datos con dos variables.
+
+* Reutilizar conjuntos de datos existentes 
+
+* Visualizar dispersión de los datos
+
+* Interpretar el valor de la correlación
+
+# Librerías
+
+```{r message=FALSE, warning=FALSE}
+library(ggplot2) # gráficos
+library(PerformanceAnalytics) # Para coorelaciones gráficas       # Correlación función chart.Correlation
+library(readr)    # Importar o CARGAR un csv 
+library(dplyr)    # Procesar data frames, filtrar (seleccionar renglones) mutate(nuevas columnas), arrange (ordenar), select (seleccionar columnas), ...
+```
+
+# Fundamento teórico
+
+* Covarianza
+* Correlación
+
+# Covarianza
+La covarianza es un valor numérico estadístico que se establece como una medida descriptiva de la asociación entre dos variables x e y.
+
+$$
+S_{xy} = \frac{\sum(x_i - \bar{x}) \cdot (y_i - \bar{y})}{n - 1}
+$$
+
+# Correlación lineal de Pearson
+
+Establece la fuerza de relación entre dos variables. Puede ser positiva o negativa
+$$
+r = \frac{S_{xy}}{S_x \cdot S_y}
+$$
+
+$$
+S_{xy}\text{ es la covarianza muestral previamente calculada} 
+$$
+
+$$
+S_x \text{ es la desviación std. de la variable x} 
+$$
+
+$$
+S_y \text{ es la desviación std. de la variable y} 
+$$
+
+$$
+S_x\cdot S_y \text { es el producto de ambas desviaciones}
+$$
+
+$$
+r = \text{ correlación de Pearson}
+$$
+
+# Valores y significado de correlación de Pearson
+
+* -0.90 = Correlación negativa muy fuerte.
+* -0.75 = Correlación negativa considerable.
+* -0.50 = Correlación negativa media.
+* -0.25 = Correlación negativa débil.
+* -0.10 = Correlación negativa muy débil.
+* 0.00 = No existe correlación alguna entre las variables.
+* +0.10 = Correlación positiva muy débil.
+* +0.25 = Correlación positiva débil.
+* +0.50 = Correlación positiva media.
+* +0.75 = Correlación positiva considerable.
+* +0.90 = Correlación positiva muy fuerte.
+* +1.00 = Correlación positiva perfecta 
+
+# Correlación
+
+* El coeficiente de correlación va desde -1 hasta +1. 
+* Los valores cercanos a -1 o a +1 corresponden a una relación lineal fuerte. 
+* Entre más cercano a cero sea el valor de la correlación, más débil es la relación lineal
+
+# Ejercicio
+
+Simular un conjunto de datos con valors de x e y
+
+# Construir datos
+```{r}
+n <- 50
+set.seed(2022)
+x <- rnorm(n = n, mean = 65, sd = 3.5)
+y <- rnorm(n = n, mean = 125, sd = 7.2)
+datos <- data.frame(x,y)
+```
+
+# Mostrar primeros datos head()
+```{r}
+head(datos)
+```
+
+
+# Mostrar útimos datos tail()
+```{r}
+tail(datos)
+
+```
+
+# Estadísticos descriptivos de datos
+```{r}
+summary(datos)
+```
+
+# Mostrar la dispesión de los datos
+```{r}
+ggplot(data = datos) +
+  geom_point(aes(x = x, y = y), col='blue')
+```
+
+# Construir tabla para determinar Covarianza
+```{r}
+tabla <- datos
+media.x <- mean(x)
+media.y <- mean(y)
+
+desv.x <- sd(x)
+desv.y <- sd(y)
+```
+
+# Construir tabla
+```{r}
+tabla <- tabla %>%
+  mutate(xi.media = x - media.x, 
+         yi.media = y - media.y,
+          xi.media.yi.media = (x - media.x) * (y - media.y))
+#tabla
+```
+
+# head(tabla, 10)
+```{r}
+head(tabla, 10)
+```
+
+# tail(tabla, 10)
+```{r}
+tail(tabla, 10)
+```
+
+# Sumatoria numerador de la fórmula
+$$
+S_{xy} = \frac{\sum(x_i - \bar{x}) \cdot (y_i - \bar{y})}{n - 1}
+$$
+```{r}
+sumatoria <- sum(tabla$xi.media.yi.media)
+sumatoria
+```
+
+# Covarianza manual
+```{r}
+covar1 <- sumatoria / (n-1)
+covar1
+```
+
+# Covarianza con cov()
+```{r}
+covar2 <- cov(x = x, y = y)
+covar2
+```
+
+# Determinar Correlación 
+$$
+r = \frac{S_{xy}}{S_x \cdot S_y}
+$$
+
+```{r}
+r1 <- covar1 / (desv.x * desv.y)
+r1
+```
+
+# Correalción con cor()
+```{r}
+r2 <- cor(x = x, y = y)
+r2
+```
+
+# Correlación con chartCorrelation()
+```{r}
+r3 <- chart.Correlation(datos, method = "pearson")
+r3
+```
+
+# Interpretación
+
+La correlación entre los valores de x e y es de `r r1` que significa una correlación positiva muy débil.
+
+# Datos de women
+
+```{r}
+datos <- women
+datos
+```
+
+# Determinar correlación de datos women cor()
+```{r}
+r1 <- cor(datos$height, datos$weight)
+r1
+```
+
+
+# Correlación con charCorrelation()
+```{r}
+r2 <- chart.Correlation(R = datos, method = "pearson")
+r2
+```
+
+¿Qué significan los 3 asteriscos *** en la Correlación?
+
+# Interpretación
+
+Se tiene un valor de correlación de `r r1` que significa una  correlación positiva muy fuerte  positiva perfecta.
+
