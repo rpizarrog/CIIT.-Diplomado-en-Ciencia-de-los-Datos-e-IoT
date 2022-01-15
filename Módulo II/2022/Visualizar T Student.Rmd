@@ -102,9 +102,9 @@ Si la muestra tiene un valor de t en el rango del nivel de confianza entonces se
 
 # Librerías
 ```{r message=FALSE, warning=FALSE}
-library(dplyr)
+# library(dplyr)
 library(mosaic)
-library(ggplot2)  # Para gráficos
+# library(ggplot2)  # Para gráficos
 library(cowplot) #Imágenes en el mismo renglón
 library("visualize")
 
@@ -122,36 +122,58 @@ source("https://raw.githubusercontent.com/rpizarrog/CIIT.-Diplomado-en-Ciencia-d
 
 # Ejercicio
 
-# Visualizar T Student
-```{r}
-
-x <- rnorm(n=500, mean = 50, sd = 2)
-x
-
-dens <- dt(x = x, df = )
-```
-
-
 Calcular e interpretar el valor de t.
 
-Se aplica una prueba de autoestima a 25 personas quienes obtienen una calificación promedio de 62.1 con una desviación estándar de 5.83. Se sabe que el valor correcto de la prueba debe ser mayor a 60. Calcular el valor de t.
+Se aplica una prueba de autoestima a 25 personas quienes obtienen una calificación promedio de 62.1 con una desviación estándar de 5.83. Se sabe que el valor correcto de la media poblacional es de 60 o mas. 
+
+Calcular el valor de t y visualizar T Student
 
 # Datos iniciales
 $$
 n=25; \bar{x}=62.1; s=5.83; \mu=60
 $$
 
+# Datos iniciales
 ```{r}
-n <- 25; media.m <- 62.1; desv.m <- 5.83; media.p <- 60
+n <- 25
+media.m <- 62.1
+desv.m <- 5.83
+media.p <- 60
 
-t <- f.devolver.t(media.muestra = media.m, media.pob = media.p, desv.muestra = desv.m, n = n)
-t
 ```
 
-# Visualizar T Student con xpt()
+
+# Devolver t
+```{r}
+t <- f.devolver.t(media.muestra = media.m, media.pob = media.p, desv.muestra = desv.m, n = n)
+t
+
+```
+
+# Determinar valores t criticos o extremos
+```{r}
+confianza <- 0.95
+alfa <- (1 - 0.95) / 2
+t.critico <- abs(qt(p = alfa, df = n - 1))
+-t.critico; t.critico; 
+```
+
+# Visualizar T Student con visualize.t()
 
 ```{r}
-xpt <- xpt(q = t , df = n-1, xlab = "t's")
+g <- visualize.t(stat = c(-t.critico, t.critico), df = n-1, section = "tails") +
+  text(0, 0.2, expression("95% Ho: Hipótesis Nula"), col = "red")+
+    text(-2.7, 0.05, expression("Ha: Alternativa"), col = "red")
+  text(2.7, 0.05, expression("Ha: Alternativa"), col = "red")
+g
+```
+
+
+# Comparar el valor de t
+```{r}
+g <- visualize.t(stat = c(-t.critico, t.critico), df = n-1, section = "tails") +
+  text(0, 0.2, expression("95%"), col = "red") +
+  abline(v = t, col = "red", lwd = 3, lty = 2)
 ```
 
 
