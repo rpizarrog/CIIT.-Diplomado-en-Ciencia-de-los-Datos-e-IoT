@@ -1,0 +1,157 @@
+---
+title: "Visualizar T Student"
+author: "Rubén Pizarro Gurrola"
+date: "14/1/2022"
+output: powerpoint_presentation
+---
+
+# Objetivo
+
+Visualizar T Student
+
+# Descripción 
+
+* Se da a conocer un panorama de la importancia de la distribución T Student comparando la campana de gauss de una distribución normal estándar y distribuciones t; 
+
+* Se identifica la fórmula para obtener el valor de t y se mencionan las funciones de paquete base de R: **dt(), pt(), qt y rt()**.
+
+* Se utilizan funciones para visualizar t student con **visualize.t()** de la librerías visualize.
+
+# Fundamento Teórico
+
+$$
+t = \frac{(\bar{x}-\mu)}{s / \sqrt{n}} = \frac{\text{diferencia a probar}}{\text{ee =error estándar}}
+$$
+
+$$
+\bar{x} = \text{media muestral}
+$$
+
+$$
+\mu = \text{media poblacional} 
+$$
+
+$$
+s = \text{desviación estándar de la muestra}
+$$
+
+$$
+n = \text{número de elementos de la muestra}
+$$
+
+
+# Características T Student
+
+Para muestras aleatorias de tamaño n desde una población normal(Mendenhall, Beaver, and Beaver 2010).
+
+El numerador representa la diferencia a probar y el denominador la desviación estándar de la diferencia llamado también Error Estándar.
+
+# Características T Student
+
+En esta fórmula t representa al valor estadístico que se estará buscando $\bar{x}$ es el promedio de la variable analizada de la muestra, y $\mu$ es el promedio poblacional de la variable a estudiar.
+
+En el denominador se tiene a $s$ como representativo de la desviación estándar de la muestra y $n$ el tamaño de ésta.
+
+# Características T Student
+
+La distribución t es más útil para tamaños muestrales pequeños, cuando la **desviación estándar de la población no se conoce** o ambos en comparación con la distribución normal estándar.
+
+# Características T Student
+
+* Tiene forma de montículo o campana de gauss y es simétrica alrededor de t=0, igual que z la normal estándar.
+
+* Es más variable que z, con “colas más pesadas”; esto es, la curva t no aproxima al eje horizontal con la misma rapidez que z. Esto es porque el estadístico t abarca dos cantidades aleatorias, $\bar{x}$ y $s$, en tanto que el estadístico z tiene sólo la media muestral, $\bar{x}$. 
+
+# Características T Student
+
+* La forma de la distribución t depende del tamaño muestral $n$. A medida que $n$ aumenta, la variabilidad de t disminuye porque la estimación $s$ de $σ$ está basada en más y más información.
+
+* Cuando $n$ sea infinitamente grande, las distribuciones t y z son idénticas. (Mendenhall, Beaver, and Beaver 2010).
+
+# Grados de Libertad
+
+$$
+gl = df = (n – 1)  \therefore 
+$$
+
+$$
+df = \text{grados de libertad}
+$$
+
+$$
+n = \text{total de elementos de la muestra de t}
+$$
+
+# Grados de Libertad
+
+* El divisor $(n−1)$ en la fórmula para la varianza muestral $s^2 = \sum(\frac{x_i-\bar{x}}{n-1})$ se denomina número de grados de libertad (df) asociado con $s^2$ determina la forma de la distribución t. 
+
+* El origen del término grados de libertad es teórico y se refiere al número de desviaciones independientes elevadas al cuadrado en $s^2$ existentes para estimar $\sigma^2$ .
+
+
+# Grados de Libertad
+
+Estos grados de libertad pueden cambiar para diferentes aplicaciones y como especifican la distribución t correcta a usar, es necesario recordar que hay que calcular los grados de libertad correctos para cada aplicación. (Mendenhall, Beaver, and Beaver 2010).
+
+
+# Su uso
+
+Determinar intervalos de confianza y pruebas de hipótesis
+
+Si la muestra tiene un valor de t en el rango del nivel de confianza entonces se acepta la hipótesis de lo contrario de rechaza.
+
+# Librerías
+```{r message=FALSE, warning=FALSE}
+library(dplyr)
+library(mosaic)
+library(ggplot2)  # Para gráficos
+library(cowplot) #Imágenes en el mismo renglón
+library("visualize")
+
+options(scipen=999) # Notación normal
+```
+
+# source()
+
+Se cargan funciones previamente ¡Ya programadas!
+
+```{r message=FALSE, warning=FALSE}
+source("https://raw.githubusercontent.com/rpizarrog/CIIT.-Diplomado-en-Ciencia-de-los-Datos-e-IoT/main/M%C3%B3dulo%20II/2022/funciones/funciones.para.distribuciones.r")
+```
+
+
+# Ejercicio
+
+# Visualizar T Student
+```{r}
+
+x <- rnorm(n=500, mean = 50, sd = 2)
+x
+
+dens <- dt(x = x, df = )
+```
+
+
+Calcular e interpretar el valor de t.
+
+Se aplica una prueba de autoestima a 25 personas quienes obtienen una calificación promedio de 62.1 con una desviación estándar de 5.83. Se sabe que el valor correcto de la prueba debe ser mayor a 60. Calcular el valor de t.
+
+# Datos iniciales
+$$
+n=25; \bar{x}=62.1; s=5.83; \mu=60
+$$
+
+```{r}
+n <- 25; media.m <- 62.1; desv.m <- 5.83; media.p <- 60
+
+t <- f.devolver.t(media.muestra = media.m, media.pob = media.p, desv.muestra = desv.m, n = n)
+t
+```
+
+# Visualizar T Student con xpt()
+
+```{r}
+xpt <- xpt(q = t , df = n-1, xlab = "t's")
+```
+
+
