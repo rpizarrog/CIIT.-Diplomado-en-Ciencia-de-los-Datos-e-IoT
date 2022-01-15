@@ -1,0 +1,526 @@
+---
+title: "Prueba de Hipótesis con Z"
+author: "Rubén Pizarro Gurrola"
+date: "15/1/2022"
+output: powerpoint_presentation
+---
+
+# Objetivo
+
+Determinar prueba de hipótesis con distribución Z
+
+# Descripción
+
+A partir de datos iniciales de una muestra se identifican hipótesis nula y alternativa.
+
+Se compara valorez de t o z para tomar la decisión de aceptar o rechazar la hipótesis nula
+
+# Fundamento teórico
+
+![](images/decidir%20distribucion%20%20a%20usar-01.jpg)
+
+# Fundamento teórico Hipótesis
+
+Intro: Una presunto culpable se tiene que demostrar su inocencia o su culpabilidad
+
+¿Es culpable el presunto?
+
+-   Ho: Hipótesis nula. No es culpable
+
+-   Ha: Hipótesis alternativa Si es culpable
+
+La idea de hipótesis es tener elementos estadísticos (valores numéricos) para que puedan ser comparados y tomar la decisión de aceptar o no una hipótesis.
+
+# Hipótesis
+
+![](images/aceptacion%20rechazo%20hipotesis%20t%20student.png)
+
+# Hipótesis
+
+![](images/Area-de-aceptacion-y-rechazo-igual.jpg)
+
+# Fundamento teórico Valores de z critico
+
+![](images/rechazo%20aceptacion%20ho%20h1.jpg){width="400"}
+
+# Funciones norm()
+
+```{r}
+# Distribuciones Normales de Z
+dnorm(x = -1.96)
+dnorm(x = 1.96)
+
+pnorm(q = -1.96)
+pnorm(q = 1.96, lower.tail = FALSE)
+
+qnorm(p = 0.0249979)
+qnorm(p = 0.0249979, lower.tail = FALSE)
+
+```
+
+# Fundamento teórico Valores de t critico
+
+![](images/valores%20de%20t%20critico%20en%20densidad%20t-01.png)
+
+# Funciones t
+
+```{r}
+dt(x = -1.812, df = 10) # Puntos de la densidad
+dt(x = 1.812, df = 10)
+
+pt(q = -1.812, df= 10)
+pt(q = 1.812, df = 10, lower.tail = FALSE)
+
+qt(p = 0.05003763, df = 10)
+qt(p = 0.05003763, df = 10, lower.tail = FALSE)
+
+```
+
+# Valores de z
+
+$$
+z = \frac{\bar{x}-\mu} {\sigma / \sqrt{n}} \therefore 
+$$
+
+$$
+z \text{: es el valor de z a contrastar} 
+$$
+
+$$
+\bar{x} \text{: la media de la  muestra} 
+$$
+
+$$
+\mu \text{: la media de la población} 
+$$
+
+$$
+\sigma \text{: la desviación estandar de la población} 
+$$
+
+$$
+n \text{: el tamaño de la muestra} 
+$$
+
+$$
+\sigma/\sqrt{n} \text{: el el error estándar SE}
+$$
+
+# Valores de t
+
+$$
+t = \frac{\bar{x}-\mu} {s / \sqrt{n}} \therefore $$
+
+$$
+t \text{: es el valor de t a contrastar} 
+$$
+
+$$
+\bar{x} \text{: la media de la  muestra} 
+$$
+
+$$
+\mu \text{: la media de la población} 
+$$
+
+$$
+s \text{: la desviación estandar de la muestra} $$
+
+$$
+n \text{: el tamaño de la muestra} 
+$$
+
+$$
+s/\sqrt{n} \text{: el el error estándar SE}
+$$
+
+# z critico y t critico
+
+Se necesitan los valores de *z.critico y t.critico* respectivamente y dependiendo de la distribución normal estandarizada o *t student .*
+
+Se utilizaría la función *qnorm()* para ***z*** y *qt()* para ***t student.***
+
+# Dos colas o una cola
+
+Se requiere el nivel de confianza, es decir el valor de alfa.
+
+$$
+\alpha = (1 - confianza) / 2 \text{;  dos colas} 
+$$
+
+$$
+\alpha = (1 - confianza) \text{;  una cola} \text{ o de lado izquierdo o derecho}
+$$
+
+# Declarar hipótesis
+
+Se debe declarar hipótesis nula *Ho* y alternativa *Ha*.
+
+-   Normalamente se tiene una pregunta de investigación que hay que comprobar o contrastar contra una hipótesis nula.
+
+-   La pregunta de investigación será la hipótesis alternativa
+
+-   La negación de esta hipótesis alternativa será la hipótesis nula.
+
+-   La hipótesis nula se asocia con la igualdad
+
+# Tabla para decidir hipótesis
+
+![](images/hip%C3%B3tesis%20una%20y%20dos%20colas.jpg)
+
+# Librerías
+
+```{r message=FALSE, warning=FALSE}
+library(mosaic)
+library(visualize)
+library(BSDA) # Para z.test
+```
+
+# Source() cargar funciones
+
+```{r message=FALSE, warning=FALSE}
+source("https://raw.githubusercontent.com/rpizarrog/CIIT.-Diplomado-en-Ciencia-de-los-Datos-e-IoT/main/M%C3%B3dulo%20II/2022/funciones/funciones.para.distribuciones.r")
+```
+
+# Ejemplo con z. Se conoce la desv. std
+
+Se tiene una media muestral con valor de 50, una desviación estándar de 5.4; se conoce la desviación estándar de la población con valor de 5.8, el tamaño de la muestra es de 40. Se estima que la media de la población debe andar alrededor de 49.
+
+```{r}
+n <- 40
+desv.p <- 5.8
+desv.m <- 5.4
+
+media.m <- 50
+media.p <- 49
+n ; desv.p; desv.m; media.m; media.p
+
+```
+
+# Ejercicio a dos colas
+
+$$
+\alpha = (1 - confianza) / 2 \text{;  dos colas} 
+$$
+
+# Definir Hipótesis (media)
+
+¿Es la media de la población diferente a 49?
+
+$$
+\text{Ho:}\mu = 49
+$$
+
+$$
+\text{Ha:}\mu \neq 49
+$$
+
+De acuerdo a la tabla es de dos colas con distribución z...
+
+# Encontrar el valor de z
+
+$$
+z = \frac{\bar{x}-\mu} {\sigma / \sqrt{n}}
+$$
+
+# Función a utilizar para lor de z a contrastar
+
+```{r}
+f.devolver.z.prueba <- function(media.m, desv.p, media.p, n) {
+  z <- (media.m - media.p) / (desv.p / sqrt(n))
+  z
+}
+```
+
+# Calcular el valor de z
+
+```{r}
+z <- f.devolver.z.prueba(media.m = media.m, desv.p = desv.p, media.p = media.p, n = n)
+z
+```
+
+Es un valor de z que hay que contrastar contra el valor crítico de z dependiendo del nivel de confianza.
+
+# Valor de z critico
+
+```{r}
+conf <- 0.90
+alfa <- (1 - conf) / 2
+z.critico <- abs(qnorm(p = alfa))
+-z.critico; z.critico
+```
+
+# Construir gráfica
+
+```{r}
+visualize.norm(stat = c(-z.critico, z.critico), section = "tails")  +
+  text(0, 0.2, paste(conf * 100, "%", "\n", "alfa=", (1 - conf), "\n",  "alfa / 2 = ", (1 - conf) /  2, "\n", "Acepta Ho", sep = ""),  col = "black") + 
+  abline(v = z, col='red', lwd = 1, lty= 4)
+```
+
+# Intervalor de confianza
+
+```{r}
+intervalo <- f.intervalo.confianza.z(media = media.m, desv = desv.m, confianza = conf, n = n)
+intervalo
+```
+
+# Aceptar o rechazar Ho
+
+```{r}
+colas <- " a dos colas"
+if (-z.critico <= z & z <= z.critico) {
+  expresion <- paste("Se acepta la Ho en donde la media de la población está alrededor de ", media.p, "en un intervalo de confianza entre ", intervalo[1], " y ", intervalo[2], " con un nivel de confianza al ", conf * 100, "%.", colas) 
+} else {
+  expresion <- paste("Se rechaza la Ho en donde la media de la población está alrededor de ", media.p, "en un intervalo de confianza entre ", intervalo[1], " y ", intervalo[2], " con un nivel de confianza al ", conf * 100, "%.", colas) 
+}
+  
+```
+
+# Interpretación
+
+Salida: `r expresion`
+
+# Definir Hipótesis (media)
+
+¿Es la media de la población diferente a 53.5?
+
+$$
+\text{Ho:}\mu = 52.5
+$$
+
+$$
+\text{Ha:}\mu \neq 52.5
+$$
+
+```{r}
+media.p <- 52.5
+```
+
+De acuerdo a la tabla es de dos colas con distribución z...
+
+# Encontrar el valor de z
+
+$$
+z = \frac{\bar{x}-\mu} {\sigma / \sqrt{n}}
+$$
+
+# Calcular el valor de z
+
+```{r}
+z <- f.devolver.z.prueba(media.m = media.m, desv.p = desv.p, media.p = media.p, n = n)
+z
+```
+
+Es un valor de z que hay que contrastar contra el valor crítico de z dependiendo del nivel de confianza.
+
+# Valor de z critico
+
+```{r}
+conf <- 0.90
+alfa <- (1 - conf) / 2
+z.critico <- abs(qnorm(p = alfa))
+-z.critico; z.critico
+```
+
+# Construir gráfica
+
+```{r}
+visualize.norm(stat = c(-z.critico, z.critico), section = "tails")  +
+  text(0, 0.2, paste(conf * 100, "%", "\n", "alfa=", (1 - conf), "\n",  "alfa / 2 = ", (1 - conf) /  2, "\n", "Acepta Ho", sep = ""),  col = "black") + 
+  abline(v = z, col='red', lwd = 1, lty= 4)
+```
+
+# Intervalor de confianza
+
+```{r}
+intervalo <- f.intervalo.confianza.z(media = media.m, desv = desv.m, confianza = conf, n = n)
+intervalo
+```
+
+# Aceptar o rechazar Ho
+
+```{r}
+colas <- " a dos colas"
+if (-z.critico <= z & z <= z.critico) {
+  expresion <- paste("Se acepta la Ho en donde la media de la población está alrededor de ", media.p, "en un intervalo de confianza entre ", intervalo[1], " y ", intervalo[2], " con un nivel de confianza al ", conf * 100, "%.", colas) 
+} else {
+  expresion <- paste("Se rechaza la Ho en donde la media de la población está alrededor de ", media.p, "en un intervalo de confianza entre ", intervalo[1], " y ", intervalo[2], " con un nivel de confianza al ", conf * 100, "%.", colas) 
+}
+  
+```
+
+# Interpretación
+
+Salida: `r expresion`
+
+# Ejercicio a una cola IZQUIERDA
+
+$$
+\alpha = (1 - confianza) \text{;  una cola} 
+$$
+
+# Definir Hipótesis (media)
+
+¿Es la media de la población menor que 49?
+
+$$
+\text{Ho:}\mu \geq 49
+$$
+
+$$
+\text{Ha:}\mu < 49
+$$
+
+De acuerdo a la tabla es de una cola lado IZQUIERDO con distribución z...
+
+```{r}
+media.p <- 49
+
+```
+
+# Encontrar el valor de z
+
+$$
+z = \frac{\bar{x}-\mu} {\sigma / \sqrt{n}}
+$$
+
+# Calcular el valor de z
+
+```{r}
+z <- f.devolver.z.prueba(media.m = media.m, desv.p = desv.p, media.p = media.p, n = n)
+z
+```
+
+Es un valor de z que hay que contrastar contra el valor crítico de z dependiendo del nivel de confianza por el lado izquierdo.
+
+# Valor de z critico
+
+```{r}
+conf <- 0.90
+alfa <- (1 - conf) 
+z.critico <- abs(qnorm(p = alfa))
+-z.critico; z.critico
+```
+
+# Construir gráfica
+
+```{r}
+visualize.norm(stat = c(-z.critico), section = "lower")  +
+  text(0, 0.2, paste(conf * 100, "%", "\n", "alfa=", (1 - conf), "\n",  "alfa  = ", (1 - conf) , "\n", "Acepta Ho", sep = ""),  col = "black") + 
+  abline(v = z, col='red', lwd = 1, lty= 4)
+```
+
+# Intervalo de confianza
+
+```{r}
+intervalo <- f.intervalo.confianza.z(media = media.m, desv = desv.m, confianza = conf, n = n)
+intervalo
+```
+
+# Aceptar o rechazar Ho
+
+```{r}
+colas <- " una cola por la izquierda"
+if (-z.critico <= z ) {
+  expresion <- paste("Se acepta la Ho en donde la media de la población es mayor o igual a ", media.p, "en un intervalo de confianza entre ", intervalo[1], " y ", intervalo[2], " con un nivel de confianza al ", conf * 100, "%.", colas) 
+} else {
+  expresion <- paste("Se rechaza la Ho en donde la media de la población es mayor o igual a ", media.p, "en un intervalo de confianza entre ", intervalo[1], " y ", intervalo[2], " con un nivel de confianza al ", conf * 100, "%.", colas) 
+}
+  
+```
+
+# Interpretación
+
+Salida: `r expresion`
+
+
+# Definir Hipótesis (media)
+
+¿Es la media de la población menor que 52.4?
+
+$$
+\text{Ho:}\mu \geq 52.4
+$$
+
+$$
+\text{Ha:}\mu < 52.4
+$$
+
+De acuerdo a la tabla es de una cola lado IZQUIERDO con distribución z...
+
+```{r}
+media.p <- 52.4
+
+```
+
+# Encontrar el valor de z
+
+$$
+z = \frac{\bar{x}-\mu} {\sigma / \sqrt{n}}
+$$
+
+# Calcular el valor de z
+
+```{r}
+z <- f.devolver.z.prueba(media.m = media.m, desv.p = desv.p, media.p = media.p, n = n)
+z
+```
+
+Es un valor de z que hay que contrastar contra el valor crítico de z dependiendo del nivel de confianza por el lado izquierdo.
+
+# Valor de z critico
+
+```{r}
+conf <- 0.90
+alfa <- (1 - conf) 
+z.critico <- abs(qnorm(p = alfa))
+-z.critico; z.critico
+```
+
+# Construir gráfica
+
+```{r}
+visualize.norm(stat = c(-z.critico), section = "lower")  +
+  text(0, 0.2, paste(conf * 100, "%", "\n", "alfa=", (1 - conf), "\n",  "alfa  = ", (1 - conf) , "\n", "Acepta Ho", sep = ""),  col = "black") + 
+  abline(v = z, col='red', lwd = 1, lty= 4)
+```
+
+# Intervalo de confianza
+
+```{r}
+intervalo <- f.intervalo.confianza.z(media = media.m, desv = desv.m, confianza = conf, n = n)
+intervalo
+```
+
+# Aceptar o rechazar Ho
+
+```{r}
+colas <- " una cola por la izquierda"
+if (-z.critico <= z ) {
+  expresion <- paste("Se acepta la Ho en donde la media de la población es mayor o igual a ", media.p, "en un intervalo de confianza entre ", intervalo[1], " y ", intervalo[2], " con un nivel de confianza al ", conf * 100, "%.", colas) 
+} else {
+  expresion <- paste("Se rechaza la Ho en donde la media de la población es mayor o igual a ", media.p, "en un intervalo de confianza entre ", intervalo[1], " y ", intervalo[2], " con un nivel de confianza al ", conf * 100, "%.", colas) 
+}
+  
+```
+
+# Interpretación
+
+Salida: `r expresion`
+
+# Utilizando z.test() con una muestra
+
+# Determinando una muestra
+```{r}
+muestra <- rnorm(n = n, mean = media.p, sd = desv.p)
+muestra
+```
+
+# Estadísticos con z.test
+```{r}
+estaditicos <- z.test(x = muestra, mu = media.p, sigma.x = desv.m, sigma.y = desv.p, conf.level = conf, alternative = "less")
+estaditicos
+
+```
+
