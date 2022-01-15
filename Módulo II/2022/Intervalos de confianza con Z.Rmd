@@ -1,0 +1,119 @@
+---
+title: "Intervalos de confianza con Z"
+author: "Rubén Pizarro Gurrola"
+date: "15/1/2022"
+output: powerpoint_presentation
+---
+
+# Objetivo
+
+Determinar intervalos de confianza de media poblacional con **desviación estándar de la población conocida y desconocida**.
+
+# Descripción
+
+Se calculan intervalos de confianza de medias poblacionales con varios ejercicios mediante fórmula de intervalos de confianza dependiendo de la distribución si es **Normal Z o T Student**.
+
+# Fundamento Teórico
+
+![](images/decidir%20distribucion%20%20a%20usar.jpg)
+
+# Intervalo de confianza para Normal
+
+Estandarizada. Cuando **SI** se conoce la desviación esstándard de la población. $$
+IC = \bar{x} \pm z \cdot \frac{\sigma}{\sqrt{n}}
+$$
+
+# Intervalo de confianza para T Student
+
+Cuando **NO** se conoce la desviación estándard de la población. $$
+IC = \bar{x} \pm t \cdot \frac{S}{\sqrt{n}}
+$$
+
+# Cargar librerías
+
+```{r message=FALSE, warning=FALSE}
+library(visualize) # Gráficos de distribuciones
+library(cowplot) # Gráficos
+library(ggplot2) # Gráficos
+library(BSDA) # Para utilizar z.test
+```
+
+# Cargar funciones
+
+Cargar funciones **¡Previamente construidas!**
+
+```{r}
+source("https://raw.githubusercontent.com/rpizarrog/CIIT.-Diplomado-en-Ciencia-de-los-Datos-e-IoT/main/M%C3%B3dulo%20II/2022/funciones/funciones.para.distribuciones.r")
+
+```
+
+# ¿Se conoce la desv. std. de la población?
+
+**SI SE CONOCE LA DESV. STD** de la población. Se utilizará la fórmula de z.
+
+# Población
+
+```{r}
+N <- 500
+poblacion <- rnorm(n = N, mean = 450, sd = 20)
+head(poblacion)
+tail(poblacion)
+
+```
+
+# Parámetros de la Población
+
+```{r}
+media.p <- mean(poblacion)
+desv.p <- sd(poblacion)
+
+```
+
+# Determinar una muestra
+
+```{r}
+n <- 50
+muestra <- sample(size = n, x = poblacion)
+muestra
+
+```
+
+# Estadísticos de la muestra
+
+```{r}
+media.m <- mean(muestra) 
+desv.m <- sd(muestra)
+
+
+```
+
+# Datos
+
+```{r}
+print("Datos")
+paste("Media Pob", media.p)
+paste("Desv Pob", desv.p)
+paste("Media Muestra", media.m)
+paste("Desv Muestra", desv.m)
+
+```
+
+# Intervalo de confianza con z
+
+```{r}
+conf <- 0.99 # 0.92, 0.95, 0.98, 0.99
+intervalo <- f.intervalo.confianza.z(media = media.m, desv = desv.m, confianza = conf, n = n)
+intervalo
+
+```
+
+# Interpretación
+
+La media de la población de donde se obtuvo la muestra debe estar en un intervalo entre `r intervalo[1]` y `r intervalo[2]`.
+
+# Intervalo de confianza usando z.test
+
+```{r}
+z.test(x = muestra, sigma.x = desv.m, conf.level = conf)
+```
+

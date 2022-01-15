@@ -1,0 +1,111 @@
+---
+title: "Intervalos de confianza con t"
+author: "Rubén Pizarro Gurrola"
+date: "15/1/2022"
+output: powerpoint_presentation
+---
+
+# Objetivo
+
+Determinar intervalos de confianza de media poblacional con **desviación estándar de la población conocida y desconocida**.
+
+# Descripción
+
+Se calculan intervalos de confianza de medias poblacionales con varios ejercicios mediante fórmula de intervalos de confianza dependiendo de la distribución si es **Normal Z o T Student**.
+
+# Fundamento Teórico
+
+![](images/decidir%20distribucion%20%20a%20usar.jpg)
+
+# Intervalo de confianza para Normal
+
+Estandarizada. Cuando **SI** se conoce la desviación esstándard de la población. $$
+IC = \bar{x} \pm z \cdot \frac{\sigma}{\sqrt{n}}
+$$
+
+# Intervalo de confianza para T Student
+
+Cuando **NO** se conoce la desviación estándard de la población. $$
+IC = \bar{x} \pm t \cdot \frac{S}{\sqrt{n}}
+$$
+
+# Cargar librerías
+
+```{r message=FALSE, warning=FALSE}
+library(visualize) # Gráficos de distribuciones
+library(cowplot) # Gráficos
+library(ggplot2) # Gráficos
+# library(BSDA) # Para utilizar z.test
+```
+
+# Cargar funciones
+
+Cargar funciones **¡Previamente construidas!**
+
+```{r}
+source("https://raw.githubusercontent.com/rpizarrog/CIIT.-Diplomado-en-Ciencia-de-los-Datos-e-IoT/main/M%C3%B3dulo%20II/2022/funciones/funciones.para.distribuciones.r")
+
+```
+
+# ¿Se conoce la desv. std. de la población?
+
+**NO SE CONOCE LA DESV. STD** de la población. Se utilizará la fórmula de t.
+
+# Muestra
+```{r}
+n <- 50
+muestra <- rnorm(n = n, mean = 450.25, sd = 20)
+muestra
+```
+
+
+# Estadísticos de la muestra
+
+```{r}
+media.m <- mean(muestra)
+desv.m <- sd(muestra)
+
+```
+
+# Datos
+
+```{r}
+print("Datos")
+#paste("Media Pob", media.p)
+#paste("Desv Pob", desv.p)
+paste("Media Muestra", media.m)
+paste("Desv Muestra", desv.m)
+
+```
+
+# Intervalo de confianza con t
+
+```{r}
+conf <- 0.95 # 0.92, 0.95, 0.98, 0.99
+intervalo <- f.intervalo.confianza.t(media = media.m, desv = desv.m, n = n, confianza = conf)
+intervalo
+
+```
+
+# Interpretación
+
+La media de la población de donde se obtuvo la muestra debe estar en un intervalo entre `r intervalo[1]` y `r intervalo[2]` a un nivel de confianza del `r conf * 100` %. Se usó la distribución t student.
+
+# Intervalo de confianza usando t.test
+
+```{r}
+# t.test no necesita alguna librería
+t.test(x = muestra, conf.level = conf)
+```
+
+# Graficando intervalo de confianza
+
+```{r}
+ggplot() +
+  geom_point(aes(x = muestra, y = dnorm(x = muestra, mean = media.m, sd = desv.m))) +
+  geom_line(aes(x = muestra, y = dnorm(x = muestra, mean = media.m, sd = desv.m))) +
+  geom_vline(xintercept = intervalo[1], col='red') +
+  geom_vline(xintercept = intervalo[2], col='red')
+
+```
+
