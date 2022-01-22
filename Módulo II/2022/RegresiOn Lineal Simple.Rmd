@@ -453,7 +453,9 @@ r.squared
 
 
 # Como interpretar R Squared
-El valor de R-squared es subjetivo dependiendo del tope o techo o criterio que le de el investigador a la representaividad de x con respecto a y en el modelo de regresión lineal.
+El valor de R-squared es subjetivo dependiendo del tope o techo o criterio que le de el investigador a la representatividad de x con respecto a y en el modelo de regresión lineal.
+
+Significa que tanto explica la variable independiente x a la variable dependiente y
 
 Si el valor fue del 70% entonces el modelo está por debajo de las expectativas.
 
