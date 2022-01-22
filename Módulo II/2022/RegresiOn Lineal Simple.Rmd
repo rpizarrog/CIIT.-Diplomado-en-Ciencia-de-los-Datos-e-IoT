@@ -1,0 +1,460 @@
+---
+title: "Regresión Lineal Simple"
+author: "Rubén Pizarro Gurrola"
+date: "21/1/2022"
+output: powerpoint_presentation
+---
+
+# Objetivo
+
+Crear un modelo de regresión lineal simple para predecir.
+
+# Descripción
+
+-   Cargar o crear datos
+-   Partir los datos en entrenamiento y validación
+-   Construir modelos
+-   Analizar modelo (estadísticamente)
+-   Predecir
+-   Interpretaciones
+
+# Modelo de regresión base
+
+![](images/modelo%20base.jpg)
+
+# Librerías
+
+```{r warning=FALSE}
+library(ggplot2)
+library(caret) # Particionar datos
+library(visualize)
+```
+
+# Datos
+
+Se necesita un conjunto de datos con al menos dos variables Variable x independiente Variable y dependiente
+
+```{r}
+x <- c(10, 12, 15, 14, 16, 
+       20, 23, 24, 16, 18,
+       24, 20, 22, 19, 20)
+y <- c(20, 24, 26, 25, 28, 
+       36, 34, 38, 29, 33,
+       34, 28, 32, 33, 38)
+
+  
+datos <- data.frame(x, y)
+```
+
+# Describir los datos
+
+```{r}
+summary(datos)
+```
+
+# Dispersión de los datos
+
+```{r}
+ggplot(data = datos) +
+  geom_point(aes(x = x, y = y), col= 'blue')
+```
+
+# Partir datos
+
+70% extraer datos entrenamiento 30% extraer datos validación
+
+```{r}
+set.seed(2022)
+entrena <- createDataPartition(y = datos$y, p = 0.70, list = FALSE, times = 1)
+
+entrena # Números d registro
+
+# Datos entrenamiento
+datos.entrenamiento <- datos[entrena, ]  # [renglones, columna]
+
+# Datos validación
+datos.validacion <- datos[-entrena, ]
+#datos
+```
+
+# Datos de entranamiento
+
+```{r}
+datos.entrenamiento
+```
+
+# Datos de validación
+
+```{r}
+datos.validacion
+```
+
+# Construr un modelo de regresión lineal
+
+$$
+Y = a + bx
+$$
+
+$$
+Y = \text{valoes a predecir}
+$$
+
+$$
+a = \text{coeficiente que represente la absica del origen de los datos de una recta lineal. A partir del eje ed las 'y' en donde empieza la linea recta}
+$$
+
+$$
+b = \text{pendiente de una recta lineal}
+$$
+
+# lm()
+
+\~ significa que 'y' depende de x o que 'y' está en función de 'x'.
+
+```{r}
+modelo <- lm(data = datos.entrenamiento, formula = y ~ x)
+
+resumen <- summary(modelo)
+```
+
+# Ver estadísticos del modelo
+
+```{r}
+resumen
+```
+
+# Como obtener coeficientes del modelo 
+$$
+Y = a + bx
+$$
+
+* a = abcisa
+* b = pendiente
+* x = valores de la variable independiente
+
+# b
+$$
+b = r \cdot(\frac{
+s_{y}}{s_x}) = \frac{\sum(x_i - \bar{x})\cdot(y_i - \bar{y})}{\sum(x_i-\bar{x})^2}
+$$
+
+# a
+$$
+a = \bar{y} - b \cdot\bar{x}
+$$
+
+# Obteniendo b con correlación
+```{r}
+correla <- cor(datos.entrenamiento$x, datos.entrenamiento$y)
+correla
+
+b1 <- correla * (sd(datos.entrenamiento$y)/sd(datos.entrenamiento$x))
+```
+
+# valor de b con Sumatorias
+
+```{r}
+numerador <- sum((datos.entrenamiento$x - mean(datos.entrenamiento$x)) * (datos.entrenamiento$y - mean(datos.entrenamiento$y)))
+denominador <- sum((datos.entrenamiento$x - mean(datos.entrenamiento$x))^2)
+
+b2 <- numerador / denominador
+
+b <- b1 
+
+b1; b2; b
+```
+
+# ¿Qué significa b ?
+
+Por cada unidad de x el valor de una predicción Y aumenta `r b` unidades. b es la pendiente en la ecuación.
+
+
+# Obtener a
+
+```{r}
+a <- mean(datos.entrenamiento$y) - (b * mean(datos.entrenamiento$x))
+a
+```
+
+# ¿Qué significa a?
+El es el coefieciente de la abcisa o intersección
+
+# Linea de tendencia
+```{r}
+Y <- a + b * datos.entrenamiento$x
+Y
+
+datos.reales <- data.frame(x = datos.entrenamiento$x, y = datos.entrenamiento$y, Y)
+datos.reales
+```
+
+
+# Linea de tendencia con la dispersión
+```{r}
+ggplot(data = datos.reales) + 
+  geom_point(aes(x = x, y = y), col= 'blue') +
+  geom_line(aes(x = x, y = Y), col= 'red')
+               
+```
+
+# a y b a partir del modelo
+```{r}
+a <- modelo$coefficients[1]
+b <- modelo$coefficients[2]
+a; b
+```
+
+# Para que sirve a y b. Para predecir
+
+Utilizar los datos de validación
+
+$$
+Y = a + bx
+$$
+
+# Predecir con datos de validacón
+```{r}
+datos.validacion
+```
+
+
+# Predicciones con la fórmula
+```{r}
+Y.prediccion <- a + b * datos.validacion$x
+Y.prediccion
+
+```
+
+# Predicciones con función predict()
+```{r}
+Y.prediccion.predict <- predict(object = modelo, newdata = datos.validacion)
+
+
+datos.prediccion <- data.frame(x = datos.validacion$x, y = datos.validacion$y, Y.prediccion, Y.prediccion.predict)
+datos.prediccion
+
+```
+
+# Visualizar
+```{r}
+ggplot() + 
+  geom_point(data = datos.validacion, aes(x = x, y = y), col= 'blue') +
+  geom_line(data = datos.reales, aes(x = x, y = Y), col= 'red') +
+  geom_point(data = datos.prediccion, aes(x = x, y = Y.prediccion), col='green')
+  
+```
+
+# Datos nuevos
+
+Predicción para x = 24.5, 27, 29
+```{r}
+
+datos.nuevos <- data.frame(x = c(24.5, 27, 29))
+Y.prediccions.nuevas <- predict(object = modelo, newdata = datos.nuevos)
+
+datos.nuevos <- data.frame(x = c(24.5, 27, 29), Y.prediccions.nuevas)
+datos.nuevos
+
+
+```
+
+# Visualizar
+```{r}
+ggplot() + 
+  geom_point(data = datos.entrenamiento, aes(x = x, y = y), col= 'blue') +
+  geom_line(data = datos.reales, aes(x = x, y = Y), col= 'red') +
+  geom_point(data = datos.nuevos, aes(x = x, y = Y.prediccions.nuevas), col = 'green')
+             
+             
+             
+```
+
+
+# El el valor de la correlación diferntes de cero
+$$
+Ho: \text{ correlacion r = 0 }
+$$
+
+$$
+Ha: \text {correlación r \ne 0}
+$$
+
+# Determinnado correlación de los datos de entrenamiento
+```{r}
+cor(datos.entrenamiento)
+```
+
+# Valor de t
+
+Se intuye que no se conoce la desviación std de la población por lo que se utiliza t student 
+$$
+t = r \cdot \frac{\sqrt{n-2}}{\sqrt{1 - r^2}}
+$$
+
+$$
+r= \text {correlación}
+$$
+
+$$
+n= \text{ número de observaciones (n-2) es grado de libertad; numero de obsevaciones menos número de variables (12 - 2 = 10)}
+$$
+
+```{r}
+n <- nrow(datos.entrenamiento) # 12
+k <- ncol(datos.entrenamiento) # 2
+t <- correla * (sqrt(n - k) / sqrt(1 - correla^2))
+t
+```
+
+# Establecer nivel de confianza al 95%
+```{r}
+confianza = 0.95
+alfa = (1 - confianza) / 2
+t.critico <- qt(p = alfa, df = n-k)
+
+-t.critico; t.critico
+```
+
+# Visualizar t contrastado contrastado contra t.critico
+```{r}
+visualize.t(stat = c(t.critico, -t.critico), section = "tails", df = n-k) 
+  text(x = 0, 0.2, "Ho")
+  abline(v = t, col='red')
+```
+
+El valor de t igual a `r t` está fuera de los valores de t.critico por los que se rechaza $Ho$ y se acepta $Ha$, es decir, !el valor de la correlación es diferente de cero! estadísticamente probado.
+
+# Error Estándar
+Fórmulas
+
+Valor de t
+$$
+t = \frac{b-0}{S_b} \therefore
+$$
+
+$$
+Sb = \text {Error estándar}
+$$
+
+
+$$
+Sb = \frac{\sqrt{\frac{\sum(y_i - Y)^2}{(n-2)}}}{\sqrt{\sum(x_i-\bar{x})^2}}
+$$
+
+```{r}
+resumen$coefficients
+```
+
+
+# Error estándar
+```{r}
+gd <- n- k
+numerador  <- sqrt(sum((datos.entrenamiento$y- datos.reales$Y)^2)/gd)
+
+denominador <- sqrt(sum((datos.entrenamiento$x - mean(datos.entrenamiento$x))^2))
+Sb <- numerador / denominador 
+Sb
+```
+
+
+Valor de t
+```{r}
+t <- b / Sb
+t
+```
+
+# Interpretación del Error Estándar
+
+Significa que tanto varía el coeficiente con respecto a su media
+
+# Interpretación de t
+
+Sirve para contrastar contra un t.critico y evaluar y probar una hipótesis nula
+
+$$
+Ho: b = 0
+$$
+
+$$
+Ha: b \ne 0
+$$
+
+
+```{r}
+confianza = 0.95
+alfa <- (1 - confianza) / 2
+
+t.critico <- qt(p = alfa, df = gd) 
+
+-t.critico; t.critico
+
+
+```
+
+Visualizar t para aceptar o rechazar Ho
+```{r}
+visualize.t(stat = c(t.critico, -t.critico), section = "tails", df = n-k) 
+  text(x = 0, 0.2, "Ho")
+  abline(v = t, col='red')
+```
+
+Se rechaza la $Ho$ de que b es igual a 0, entonces se acepta de la $Ha$ y se interpreta de que efectivamente b es diferente de cero.
+
+# Probabilidad de t
+```{r}
+prob <- pt(q = t, df = gd, lower.tail = FALSE) * 2 
+prob
+```
+El valor de la probabilidad de t significa que es probable es que t esté dentro de los niveles de confianza para aceptar $Ho$. Entre más alejado esté t de los valores críticos de t, entonces se acepta la $Ha$ y se estima que el predictor de b es un buen predictor para el modelo.
+
+
+# RSE Residual Stándar Error = Error Estándar Residual o la Desviación del Error Estándar
+
+El Error Estándar Residual (RSS) se interpreta que tanto varía una predicción conforme al promedio o la media aritmética de los valores reales. Entre más cerca esté de cero el modelo es más confiable, sin embargo este valor siempre debe ser comparado contra otro modelo predictivo con los mismos datos.
+
+# Fórmula RSE
+El RSE
+$$
+RSE = \sqrt{\frac{\sum(y_i - Y)^2}{gd}}
+$$
+
+```{r}
+suma <- sum((datos.entrenamiento$y - datos.reales$Y)^2)
+numerador <- suma 
+denominador = gd
+RSE <- sqrt(numerador / denominador)  
+RSE
+```
+
+# Grados de libertad
+La diferencia entre el número de observaciones y el número de variables en una regresión
+```{r}
+n <- nrow(datos.entrenamiento)
+k <- ncol(datos.entrenamiento)
+gd <- n-k
+gd
+```
+
+# Coeficiente de determinación r
+
+Es el nivel de representatividad que tiene x con respecto a y, o que tanto impacta la variable independiente x a la variable dependiente y.
+
+$$
+CoefDet <-corela ^ 2 
+$$
+
+```{r}
+correla
+
+r.squared <- correla^2
+r.squared <- r.squared * 100
+r.squared 
+```
+
+
+# Como interpretar R Squared
+El valor de R-squared es subjetivo dependiendo del tope o techo o criterio que le de el investigador a la representaividad de x con respecto a y en el modelo de regresión lineal.
+
+Si el valor fue del 70% entonces el modelo está por debajo de las expectativas.
+
+Si el valor fue del 60% entonces el modelo está dentro de las expectativas esperadas.
