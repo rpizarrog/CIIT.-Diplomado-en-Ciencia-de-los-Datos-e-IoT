@@ -1,0 +1,246 @@
+---
+title: "Comparar modelos Polinómico vs Regresión Lineal Simple"
+author: "Rubén Pizarro Gurrola"
+date: "22/1/2022"
+output: word_document
+---
+
+# Objetivo
+
+Evaluar modelos polinómico VS modelo Regresión lineal simple con un conjunto de datos  para realizar predicciones.
+
+# Descripción
+
+* ¿Qué hay que evaluar en los modelos
+* Cargar Datos
+* Describir los datos
+* Limpiar datos
+* Dividir datos entrenamiento y validación
+* Construir modelo regresión lineal simple
+* Construir modelo polinómico
+* Evaluar modelos
+  * R Square. Determinar cuanto explica la variable independiente a la variable dependiente. ¿Explicar por encima del 70%?
+  * Residual Standar Error decsribir cual modelo es más confiable, aquel que tenga valor mas cercano a cero
+  * La confianza de los predictores con el valor de la probabilidad pr(t). *, **, ***. Si son estadístiacmente significativos y tanto: 0.90, 0.95, 0.99.
+* Predicciones con ambos modelos
+* Comparar predicciones
+* Iterpretar el ejercicio
+  
+
+# Librerías
+```{r message=FALSE, warning=FALSE}
+library(ggplot2) # Visualizar datos
+library(caret) # Partir datos
+library(dplyr) # select filter mutate
+library(readr) # Leer datos csv
+# library()
+```
+
+# Cargar datos
+
+## Cargar datos localmente
+```{r}
+datos <- read.csv("../../datos/datos.FIFA.limpios.csv")
+
+
+```
+
+## Cargar datos de la WEB csv
+```{r}
+
+# datos <- read.csv("https://raw.githubusercontent.com/rpizarrog/CIIT.-Diplomado-en-Ciencia-de-los-Datos-e-IoT/main/M%C3%B3dulo%20II/datos/datos.FIFA.limpios.csv", encoding = "iso-8859-1")
+
+```
+
+
+# Describir los datos
+```{r}
+str(datos)
+summary(datos)
+```
+
+
+
+## Variables de interés. Pregunta de interés. 
+
+¿Cual es la predicción del peso de acuerdo a la altura de un jugador de fútbol internacional?
+
+Aplicar modelo de regresión lineal simple
+Aplicar modelo de regresión polinómico
+
+* Altura y el peso. Estatura y Pesokgs
+
+## Datos filtrados
+
+```{r}
+datos <- select(datos, Estatura, PesoKgs)
+
+
+
+```
+
+# Limpiar datos
+
+Los datos vienen con valores de NA en algunos registros,  Quitarlos.
+```{r}
+cuales <- subset(datos, is.na(Estatura))
+cuales <- rownames(cuales)
+cuales <- as.numeric(cuales)
+cuales
+
+# Quitar registros
+datos <- datos[-cuales, ]
+```
+
+
+## Verificar que no hay valores NA
+```{r}
+summary(datos)
+```
+## head(datos)
+```{r}
+head(datos)
+```
+
+## tail(datos)
+```{r}
+tail(datos)
+```
+
+# Crear datos de entrenamiento y validacón
+```{r}
+set.seed(2022)
+entrena <- createDataPartition(y = datos$PesoKgs, p = 0.70, list = FALSE, times = 1)
+
+# entrena # Números d registro
+
+# Datos entrenamiento
+datos.entrenamiento <- datos[entrena, ]  # [renglones, columna]
+
+# Datos validación
+datos.validacion <- datos[-entrena, ]
+#datos
+```
+
+## head(datos.entrenamiento, 10)
+```{r}
+head(datos.entrenamiento, 10)
+```
+
+## tail(datos.entrenamiento, 10)
+```{r}
+tail(datos.entrenamiento, 10)
+```
+
+## head(datos.validacion, 10)
+```{r}
+head(datos.validacion, 10)
+```
+
+## tail(datos.validacion, 10)
+```{r}
+tail(datos.validacion, 10)
+```
+
+# Visualizar dispersión de los datos
+```{r}
+ggplot(data = datos.entrenamiento) +
+  geom_point(aes(x = Estatura, y = PesoKgs), col='blue')
+```
+
+
+# Construir modelos
+
+## Construir modelo regresión lineal simple
+```{r}
+modelo.simple <- lm(data = datos.entrenamiento, formula = PesoKgs ~ Estatura)
+
+resumen.mls <- summary(modelo.simple)
+resumen.mls
+```
+
+## Coeficientes a y b 
+```{r}
+a <- resumen.mls$coefficients[1]
+b <- resumen.mls$coefficients[2]
+a; b
+```
+
+## Predecir conforme a fórmula
+$$
+Y = a + bx
+$$
+
+## Visualizar la recta de regresión lineal
+```{r}
+ggplot(data = datos.entrenamiento) +
+  geom_point(aes(x = Estatura, y = PesoKgs), col='blue') +
+  geom_line(aes(x = Estatura, y = a + b * Estatura), col='red')
+```
+
+
+## Construir modelo regresión polinómico Segunda potencia
+
+$$
+Y = β_0 + β_1{x_1}^2 + β_1{x_2}^3 + β_i{x_i}^n +ϵi
+$$
+
+$$
+\beta_0 \text{ Es la abcisa a, dede donde inicia la curva}
+$$
+
+$$
+\beta_1 \text{ Es el coeficiente de b}
+$$
+
+$$
+\b_i \text{ son los coefientes de x}
+$$
+```{r}
+modelo.poly2 <-lm(data = datos.entrenamiento, formula = PesoKgs ~ poly(Estatura, 2))
+
+resumen.poly2 <- summary(modelo.poly2)
+resumen.poly2
+```
+
+## Curva del modelo Polinómico  esegundo nivel
+```{r}
+ggplot(data = datos.entrenamiento) +
+  geom_point(aes(x = Estatura, y = PesoKgs), col='blue') +
+  geom_line(aes(x = Estatura, y = predict(modelo.poly2, datos.entrenamiento)), col='red')
+```
+
+
+# Predecir con los dos modelos
+
+Predecir con datos d validación
+```{r}
+prediciones.mls <- predict(object = modelo.simple, newdata = datos.validacion)
+
+predicciones.poly2 <- predict(object = modelo.poly2, newdata = datos.validacion)
+
+predicciones <- data.frame(Estatura = datos.validacion$Estatura,
+                           PesoKgs = datos.validacion$PesoKgs, prediciones.mls, predicciones.poly2)
+
+```
+
+
+## head(predicciones, 10)
+```{r}
+head(predicciones, 10)
+```
+
+## tail(predicciones, 10)
+```{r}
+tail(predicciones, 10)
+```
+
+
+# Interpretar los modelos
+
+```{r}
+resumen.mls
+
+resumen.poly2
+```
+

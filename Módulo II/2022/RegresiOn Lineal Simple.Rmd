@@ -123,6 +123,26 @@ resumen <- summary(modelo)
 resumen
 ```
 
+# Compararlo contra un Polinómico de equinto nivel
+```{r}
+modelo.poly5 <- lm(data = datos.entrenamiento, formula = y ~ poly(x, 5))
+
+resumen.mpply5 <- summary(modelo.poly5)
+resumen.mpply5 
+```
+
+# Curva de quinto nivel con los datos
+```{r}
+ggplot(data = datos.entrenamiento) +
+  geom_point(aes(x = x, y = y), col='blue') +
+  geom_line(aes(x = x, y = predict(object = modelo.poly5, newdata = datos.entrenamiento)), col='red')
+```
+
+# Interpretación de modelos
+Con el modelo polinómico de quinto nivel se observa que el valor de R Squared es mayor que el modelo de regresión lineal simple por lo que la aumenta la representación de x a y en este modelo. 
+
+Se explica más el valor de y con respecto a x en el modelo polinómico de quinta potencia.
+
 # Como obtener coeficientes del modelo 
 $$
 Y = a + bx
