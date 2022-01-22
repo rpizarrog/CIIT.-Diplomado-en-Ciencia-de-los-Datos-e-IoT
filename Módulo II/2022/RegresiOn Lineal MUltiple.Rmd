@@ -1,0 +1,162 @@
+---
+title: "Regresión Lineal Múltiple"
+author: "Rubén Pizarro Gurrola"
+date: "22/1/2022"
+output: powerpoint_presentation
+---
+
+# Objetivo
+
+Crear un modelo de regresión lineal múltiple con datos esperanza de vida y realizar predicciones con base en características de una población
+
+# Decripción
+
+-   Cargar datos. Se utiliza datos existentes **state.x77** de la librería dplyr.
+
+-   Limpiar datos.
+
+-   Describir datos.
+
+    -   Identificar variables independientes (x1, x2, x3, x4, varias variables).
+    -   Identifiar variable dependiente (y)
+
+-   Crear los datos de entrenamieto y validación.
+
+-   Crear modelo de regresión múltiple lm(dependiente \~ x1 + x2 + x3 + x4 + xn)
+
+# Librerías
+
+```{r message=FALSE, warning=FALSE}
+library(dplyr)
+library(caret)
+library(ggplot2)
+library(PerformanceAnalytics) # Para coorelaciones gráficas 
+```
+
+# Cargar datos
+
+```{r}
+datos <- data.frame(state.x77)
+
+```
+
+# Limpiar datos
+
+Modificar nombres de columnas
+
+```{r}
+colnames(datos) <- c("poblacion", "ingreso.economico", "analfabetismo", "esperanza.vida", "asesinatos", "ind.educacion", "clima.frio", "area")
+
+```
+
+# head(datos)
+
+```{r}
+head(datos)
+```
+
+# tail(datos)
+
+```{r}
+tail(datos)
+```
+
+# Definir variable dependiente e independientes
+
+-   La esperanza de vida es variable dependiente
+-   Las variables: "poblacion", "ingreso.economico", "analfabetismo", "asesinatos", "ind.educacion", "clima.frio", "area" son variables independintes
+
+Significa que la esperaza de vida de una persona depende de estas características
+
+# Correlaciones entre variables
+
+```{r}
+correlaciones <- chart.Correlation(datos, method = "pearson")
+```
+
+# Corelación con cor()
+
+```{r}
+correla <- cor(datos)
+correla
+```
+
+# Crear datos de entrenamiento y de validación
+
+```{r}
+set.seed(2022)
+entrena <- createDataPartition(y = datos$esperanza.vida, p = 0.70, list = FALSE, times = 1)
+
+# entrena # Números d registro
+
+# Datos entrenamiento
+datos.entrenamiento <- datos[entrena, ]  # [renglones, columna]
+
+# Datos validación
+datos.validacion <- datos[-entrena, ]
+#datos
+```
+
+# Datos de entrenamiento head(10)
+
+```{r}
+head(datos.entrenamiento, 10)
+```
+
+# Datos de validación head(10)
+
+```{r}
+head(datos.validacion, 10)
+```
+
+# Crear modelo con datos de entrenamiento
+
+La fórmula de un modelo de regresión lineal múltiple tiene que definirse la variable dependiente en función de todas o las que se quiera analizar.
+
+```{r}
+modelo <- lm(data = datos.entrenamiento, formula = esperanza.vida ~ poblacion + ingreso.economico + analfabetismo + asesinatos + ind.educacion + clima.frio + area )
+
+resumen <- summary(modelo)
+resumen
+```
+
+# Evaluar el modelo
+
+![](images/modelo%20regresi%C3%B3n%20m%C3%BAltiple.jpg)
+
+De las variables independientes, la que más significación estadística tiene con respeto a la esperanza de vida es *asesinatos* con un nivel de confianza del 99.9%, es un confiable predictor.
+
+El clima frio es in factor importante para la esperanza de vida solo que a un nivel de confianza del 90%
+
+# Evaluar el modelo
+
+El valor de Adjusted R-squared:  0.7074 significa que todas las variables representan o explican alrededor del 70% la esperanza de vida de una persona.
+
+El Error estándar de los residuales de Residual standard error: 0.768 significa que tanto varían las predicciones de la esperanza de vida conforme a su media con estos predictores.
+
+# Predicciones
+
+```{r}
+predicciones <- predict(object = modelo, newdata = datos.validacion)
+
+
+predicciones <- mutate(datos.validacion[c(1,2,3,5,6,7,8,4)], predicciones)
+
+predicciones
+```
+
+# Datos nuevos
+```{r}
+datos.nuevos <- data.frame(poblacion = 400, ingreso.economico=500, analfabetismo = 2.1, asesinatos = 10, ind.educacion = 80, clima.frio = 75, area = 150)
+datos.nuevos
+```
+
+# Predicción con el dato nuevo
+```{r}
+prediccion <- predict(object = modelo, newdata = datos.nuevos)
+
+
+prediccion
+```
+
+La esperanza de vida para una persona con características de `r datos.nuevos` es de `prediccion` años de vida.
